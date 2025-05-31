@@ -25,7 +25,7 @@ Application de chat en temps réel inspirée de Discord, développée avec Node.
 
 ## 📋 Prérequis
 
-- Node.js (v16+)
+- Node.js
 - MongoDB
 - Angular CLI
 
@@ -46,7 +46,7 @@ JWT_SECRET=votre-secret-key
 
 Lancer le serveur :
 ```bash
-npm run dev
+node server.js
 ```
 
 ### Frontend
@@ -58,16 +58,18 @@ ng serve
 
 L'application sera accessible sur `http://localhost:4200`
 
-## 📁 Structure Simplifiée
+## 📁 Structure
 
 ```
 piscord/
 ├── backend/
-│   ├── models/         # Modèles MongoDB
-│   ├── routes/         # Routes API
-│   ├── middleware/     # Auth middleware
-│   ├── .env           # Variables d'environnement
-│   └── server.js      # Serveur principal
+│    ├── routes/           # Routes
+│    ├── controllers/      # Contrôleurs
+│    ├── services/         # Services métier
+│    ├── repositories/     # Accès aux données
+│    ├── models/           # Schémas MongoDB
+│    ├── middleware/       # Middlewares transversaux
+│    └── server.js         # Point d'entrée
 │
 └── frontend/
     └── src/
@@ -76,29 +78,6 @@ piscord/
             ├── services/       # Services (API, Socket)
             └── app.module.ts   # Module principal
 ```
-
-## 🔌 API Principales
-
-### Auth
-- `POST /auth/register` - Inscription
-- `POST /auth/login` - Connexion
-
-### Serveurs
-- `GET /servers` - Liste des serveurs
-- `POST /servers` - Créer un serveur
-- `POST /servers/join` - Rejoindre avec code
-
-### Socket.io Events
-- `message` - Envoyer un message
-- `new-message` - Recevoir un message
-- `typing` - Indicateur de frappe
-- `join-server` - Rejoindre un serveur
-
-## 🚀 Déploiement
-
-**Backend**: Render.com
-**Frontend**: Vercel
-**Base de données**: MongoDB Atlas
 
 ---
 
