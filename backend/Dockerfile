@@ -5,8 +5,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-COPY . .
+RUN npm install -g nodemon
 
 EXPOSE 3000
 
-CMD [ "node", "server.js" ]
+CMD ["nodemon", "--legacy-watch", "server.js"]
