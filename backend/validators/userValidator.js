@@ -2,7 +2,7 @@ const { body } = require("express-validator");
 
 /**
  * Validateurs pour les données utilisateur
- * Contient les règles de validation pour l'inscription et autres opérations utilisateur
+ * Contient les règles de validation pour l'inscription
  */
 exports.validateSignup = [
     body("email")
@@ -24,4 +24,18 @@ exports.validateSignup = [
     body("username")
         .isLength({ min: 1, max: 24 })
         .withMessage("Le nom d'utilisateur doit contenir entre 1 et 24 caractères"),
+];
+
+/**
+ * Validateurs pour les données utilisateur
+ * Contient les règles de validation pour la connexion
+ */
+exports.validateSignin = [
+    body("email")
+        .isEmail()
+        .withMessage("Format d'email invalide"),
+    
+    body("password")
+        .isLength({ max: 64 })
+        .withMessage("Le mot de passe doit contenir maximum 64 caractères"),
 ];
