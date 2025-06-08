@@ -44,7 +44,7 @@ class AuthController {
         catch (err) {
             return res.status(500).json({
                 success: false,
-                erreur: "Erreur lors de l'inscription"
+                erreur: err.message
             });
         }
     };
@@ -86,7 +86,7 @@ class AuthController {
         catch (err) {
             return res.status(500).json({
                 success: false,
-                erreur: "Erreur lors de la connexion"
+                erreur: err.message
             });
         }
     };
@@ -128,7 +128,7 @@ class AuthController {
 
             return res.status(500).json({
                 success: false,
-                erreur: "Erreur lors du rafraîchissement du token"
+                erreur: err.message
             });
         }
     };

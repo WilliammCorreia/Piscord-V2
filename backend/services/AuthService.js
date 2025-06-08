@@ -44,7 +44,7 @@ class AuthService {
             return { accessToken, refreshToken };
         }
         catch (err) {
-            throw new Error("Echec lors de la génération du token : ", err.message);
+            throw new Error(err.message);
         }
     }
 
@@ -77,7 +77,7 @@ class AuthService {
             return { newUser, tokens };
         }
         catch (err) {
-            throw new Error("Echec lors de l'inscription : ", err.message);
+            throw new Error(err.message);
         }
     }
 
@@ -113,7 +113,7 @@ class AuthService {
             return {user, tokens};
         }
         catch (err) {
-            throw new Error("Echec lors de l'inscription : ", err.message);
+            throw new Error(err.message);
         }
     }
 
@@ -154,7 +154,7 @@ class AuthService {
             }
         }
         catch (err) {
-            throw new Error("Echec lors du rafraîchissement du token : ", err.message);
+            throw new Error(err.message);
         }
     }
 }
