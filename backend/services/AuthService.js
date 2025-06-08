@@ -116,6 +116,47 @@ class AuthService {
             throw new Error("Echec lors de l'inscription : ", err.message);
         }
     }
+
+    /**
+     * Rafraîchit un token d'accès JWT à partir d'un refresh token valide
+     * @param {Object} tokens - Objet contenant le refresh token
+     * @param {string} tokens.refreshToken - Refresh token JWT à vérifier
+     * @returns {Promise<string|boolean>} Nouvel access token JWT si le refresh token est valide, sinon false
+     * @throws {Error} Si le refresh token est invalide ou expiré
+     * @throws {Error} Si l'utilisateur associé au refresh token est introuvable
+     * @throws {Error} Si une erreur survient lors de la vérification ou de la génération du token
+     */
+    async refresh(tokens) {
+        try {
+            let refreshToken = tokens.refreshToken;
+
+            refreshToken = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+            if (refreshToken.iat < refreshToken.exp) {
+                const user = await UserRepository.findByUserId(refreshToken.user);
+
+                const payload = {
+                    userId: user._id,
+                    email: user.email,
+                    username: user.username
+                };
+                
+                const accessToken = jwt.sign(
+                    payload, 
+                    process.env.JWT_SECRET,
+                    { expiresIn: '15min'}
+                );
+
+                return accessToken;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (err) {
+            throw new Error("Echec lors du rafraîchissement du token : ", err.message);
+        }
+    }
 }
 
 module.exports = new AuthService();

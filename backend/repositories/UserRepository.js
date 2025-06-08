@@ -29,6 +29,16 @@ class UserRepository {
         const user = await User.findOne({ email });
         return user;
     }
+
+    /**
+     * Recherche un utilisateur par son ID
+     * @param {string} userId - ID de l'utilisateur à rechercher
+     * @returns {Promise<Object|null>} L'utilisateur trouvé ou null si aucun résultat
+     */
+    async findByUserId(userId) {
+        const user = await User.findOne({ _id: userId });
+        return user;
+    }
 }
 
 module.exports = new UserRepository();

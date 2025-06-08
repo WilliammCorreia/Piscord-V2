@@ -90,6 +90,64 @@ class AuthController {
             });
         }
     };
+
+    /**
+     * Rafraîchit le token d'accès JWT en utilisant le refresh token
+     * @param {Object} req - Objet de requête Express
+     * @param {Object} res - Objet de réponse Express
+     * @returns {Promise<void>} Réponse JSON avec le nouveau token ou une erreur
+     */
+    async refresh(req, res) {
+        try {
+            const tokens = req.cookies;
+
+            const result = await AuthService.refresh(tokens);
+
+            if (result) {
+                res.clearCookie("accessToken");
+                res.cookie("accessToken", result);
+
+                return res.status(200).json({
+                    success: true,
+                    message: "Token rafraîchit"
+                })
+            }
+            else {
+                res.clearCookie("accessToken");
+                res.clearCookie("refreshToken");
+
+                return res.status(401).json({
+                    success: false,
+                    message: "Reconnexion requise"
+                })
+            }
+        }
+        catch (err) {
+            res.clearCookie("accessToken");
+            res.clearCookie("refreshToken");
+
+            return res.status(500).json({
+                success: false,
+                erreur: "Erreur lors du rafraîchissement du token"
+            });
+        }
+    };
+
+    /**
+     * Déconnecte l'utilisateur en supprimant les cookies d'authentification
+     * @param {Object} req - Objet de requête Express
+     * @param {Object} res - Objet de réponse Express
+     * @returns {Promise<void>} Réponse HTTP 204 No Content
+     */
+    disconnect(req, res) {
+        res.clearCookie("accessToken");
+        res.clearCookie("refreshToken");
+
+        return res.status(204).json({
+            success: true,
+            message: "Utilisateur bien déconnecté"
+        });
+    }
 }
 
 module.exports = new AuthController();
