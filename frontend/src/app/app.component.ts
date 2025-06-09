@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.html',
+  templateUrl: './app.component.html',
   standalone: false,
-  styleUrl: './app.scss'
+  styleUrl: './app.component.scss'
 })
-export class App {
+export class AppComponent {
   protected title = 'frontend';
 }
