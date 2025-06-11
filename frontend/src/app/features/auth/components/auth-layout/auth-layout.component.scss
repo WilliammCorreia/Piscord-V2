@@ -4,7 +4,36 @@ aside {
     border-right: 2px solid var(--bg-secondary);
 }
 
-h2 {
-    width: 16.25rem;
+header {
+    height: 2.5rem;
+    padding: var(--spacing-sm);
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+section {
+    margin: var(--spacing-sm);
+}
+
+.title {
     height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+article {
+    padding: 0 var(--spacing-md);
+}
+
+a {
+    margin: var(--spacing-md);
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.05rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+
+    &.active {
+        color: var(--text-primary);
+    }
 }

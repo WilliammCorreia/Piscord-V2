@@ -1,36 +1,36 @@
 :root {
-    // Couleurs de texte
-    --text-primary: #DCDDDE; 
-    --text-secondary: #8E9297;
+  // Couleurs de texte
+  --text-primary: #DCDDDE; 
+  --text-secondary: #8E9297;
 
-    // Couleurs de fond
-    --bg-primary: #1A1D23;
-    --bg-secondary: #2F3136;
-    --bg-input: #40444B;
-    --bg-hover: #4F545C;
+  // Couleurs de fond
+  --bg-primary: #1A1D23;
+  --bg-secondary: #2F3136;
+  --bg-input: #40444B;
+  --bg-hover: #4F545C;
 
-    // Couleurs bordure
-    --stroke-primary: #202225;
-    --stroke-secondary: #2f3136;
+  // Couleurs bordure
+  --stroke-primary: #202225;
+  --stroke-secondary: #2f3136;
 
-    // Couleurs d'état
-    --success: #3BA55D;
-    --error: #ef4444;
-    --warning: #FAA61A;
+  // Couleurs d'état
+  --success: #3BA55D;
+  --error: #ef4444;
+  --warning: #FAA61A;
 
-    // Espacement
-    --spacing-xs: 0.25rem;   // 4px
-    --spacing-sm: 0.5rem;    // 8px
-    --spacing-md: 1rem;      // 16px
-    --spacing-lg: 1.5rem;    // 24px
-    --spacing-xl: 2rem;      // 32px
-    --spacing-2xl: 3rem;     // 48px
+  // Espacement
+  --spacing-xs: 0.25rem;   // 4px
+  --spacing-sm: 0.5rem;    // 8px
+  --spacing-md: 1rem;      // 16px
+  --spacing-lg: 1.5rem;    // 24px
+  --spacing-xl: 2rem;      // 32px
+  --spacing-2xl: 3rem;     // 48px
 
-    // Border Radius
-    --radius-sm: 0.25rem;    // 4px
-    --radius-md: 0.5rem;     // 8px
-    --radius-lg: 0.75rem;    // 12px
-    --radius-xl: 1rem;       // 16px
+  // Border Radius
+  --radius-sm: 0.25rem;    // 4px
+  --radius-md: 0.5rem;     // 8px
+  --radius-lg: 0.75rem;    // 12px
+  --radius-xl: 1rem;       // 16px
 }
 
 * {
@@ -54,58 +54,58 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 h1 {
-    font-size: 1.125rem;
-    font-weight: 800;
-    letter-spacing: 3%;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: 0.03rem;
 }
 
 h3 {
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 5%;
-    text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
 }
 
 p {
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.4;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 input {
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 5%;
-    border: 1px solid var(--stroke-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    background-color: var(--bg-input);
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  border: 1px solid var(--stroke-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--bg-input);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
 
-    &:focus {
-        border: 1px solid var(--stroke-secondary);
-    }
+  &:focus {
+      border: 1px solid var(--stroke-secondary);
+  }
 }
 
 button {
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 5%;
-    border: 1px solid var(--stroke-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    background-color: var(--bg-input);
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-    align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  border: 1px solid var(--stroke-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  align-items: center;
 
-    &:hover {
-        background-color: var(--bg-hover);
-        border: 1px solid var(--stroke-secondary);
-    }
+  &:hover {
+      background-color: var(--bg-hover);
+      border: 1px solid var(--stroke-secondary);
+  }
 }
