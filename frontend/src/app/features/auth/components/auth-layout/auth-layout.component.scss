@@ -1,3 +1,8 @@
+.content {
+    display: flex;
+    width: 100%;
+}
+
 aside {
     width: 25%;
     height: 100vh;
@@ -14,6 +19,10 @@ section {
     margin: var(--spacing-sm);
 }
 
+main {
+    width: 100%;
+}
+
 .title {
     height: 2rem;
     display: flex;
@@ -24,7 +33,7 @@ article {
     padding: 0 var(--spacing-md);
 }
 
-a {
+article a {
     margin: var(--spacing-md);
     height: 2rem;
     display: flex;
@@ -32,6 +41,7 @@ a {
     letter-spacing: 0.05rem;
     color: var(--text-secondary);
     text-decoration: none;
+    font-size: 0.875rem;
 
     &.active {
         color: var(--text-primary);

@@ -1,17 +1,21 @@
-<aside>
-    <header>
-        <h2>Piscord</h2>
-    </header>
-    <section>
-        <div class="title">
-            <h3>Catégories</h3>
-        </div>
-        <article>
-            <a routerLink="/auth/signup" routerLinkActive="active"># Inscription</a>
-            <a routerLink="/auth/signin" routerLinkActive="active"># Connexion</a>
-        </article>
-    </section>
-</aside>
-<main>
-    <router-outlet></router-outlet>
-</main>
+<div class="content">
+    <aside>
+        <header>
+            <a routerLink="/auth">
+                <h2>Piscord</h2>
+            </a>
+        </header>
+        <section>
+            <div class="title">
+                <h3>Catégories</h3>
+            </div>
+            <article>
+                <a routerLink="/auth/signup" routerLinkActive="active"># Inscription</a>
+                <a routerLink="/auth/signin" routerLinkActive="active"># Connexion</a>
+            </article>
+        </section>
+    </aside>
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+</div>
