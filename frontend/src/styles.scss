@@ -68,7 +68,7 @@ h3 {
   text-transform: uppercase;
 }
 
-p {
+p, label {
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
@@ -76,7 +76,7 @@ p {
 
 input {
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.05rem;
   border: 1px solid var(--stroke-primary);
   border-radius: var(--radius-lg);
@@ -86,7 +86,8 @@ input {
   transition: all 0.2s ease;
 
   &:focus {
-      border: 1px solid var(--stroke-secondary);
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
   }
 }
 
@@ -96,7 +97,6 @@ button {
   letter-spacing: 0.05rem;
   border: 1px solid var(--stroke-primary);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
   background-color: var(--bg-input);
   color: var(--text-primary);
   transition: all 0.2s ease;

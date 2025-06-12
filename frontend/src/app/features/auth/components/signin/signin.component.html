@@ -3,6 +3,27 @@
         <h1># Connexion</h1>
     </header>
     <article>
-        
+        <form [formGroup]="formGroup" (submit)="onSubmit($event)">
+            <div class="inputs">
+                <div class="email">
+                    <label for="email">Email : </label>
+                    <input id="email" name="email" placeholder="Saisir votre email" type="email" formControlName="email">
+                    <div *ngIf="isFieldValid('email')" class="error">
+                        <div *ngIf="formGroup.get('email')?.hasError('required')">*Ce champ est requis</div>
+                    </div>
+                    <div *ngIf="isFieldValid('email')" class="error">
+                        <div *ngIf="formGroup.get('email')?.hasError('email')">*Ce champ nécessite un email valide</div>
+                    </div>
+                </div>
+                <div class="password">
+                    <label for="password">Mot de passe : </label>
+                    <input id="password" name="password" placeholder="Saisir votre mot de passe" type="password" formControlName="password">
+                    <div *ngIf="isFieldValid('password')" class="error">*Ce champ est requis</div>
+                </div>
+            </div>
+            <div class="submit">
+                <button type="submit" [disabled]="formGroup.invalid">Se connecter</button>
+            </div>
+        </form>
     </article>
 </div>
