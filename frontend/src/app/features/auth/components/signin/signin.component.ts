@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signin',
@@ -10,8 +11,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class SigninComponent {
 
   public formGroup: FormGroup;
+  public isLoginFailed: boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {
     this.formGroup = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
@@ -20,11 +25,25 @@ export class SigninComponent {
 
   onSubmit(ev: Event) {
     ev.preventDefault();
-    console.log("value : ", this.formGroup.value);
+    this.isLoginFailed = false;
+
+    if (this.formGroup.valid) {
+      const credentials = this.formGroup.value;
+
+      const res = this.authService.signin(credentials).subscribe({
+        next: (res) => {
+          console.log("Connexion réussie : ", res);
+        },
+        error: (err) => {
+          this.isLoginFailed = true;
+          this.formGroup.reset();
+        }
+      });
+    }
   };
 
   isFieldValid(name: string) {
     const field = this.formGroup.get(name);
     return field?.invalid && field?.touched
-  }
+  };
 }
