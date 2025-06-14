@@ -5,12 +5,10 @@
     <article>
         <form [formGroup]="formGroup" (submit)="onSubmit($event)">
             <div class="inputs">
-                <div *ngIf="isLoginFailed" class="error">Email ou mot de passe incorrect</div>
                 <div class="email">
                     <label for="email">Email : </label>
                     <input 
-                        id="email" 
-                        name="email" 
+                        id="email"
                         placeholder="Saisir votre email" 
                         type="email" 
                         formControlName="email">
@@ -22,16 +20,36 @@
                 <div class="password">
                     <label for="password">Mot de passe : </label>
                     <input 
-                        id="password" 
-                        name="password" 
+                        id="password"
                         placeholder="Saisir votre mot de passe" 
                         type="password" 
                         formControlName="password">
-                    <div *ngIf="isFieldValid('password')" class="error">*Ce champ est requis</div>
+                    <div *ngIf="isFieldValid('password'); else elseBlock" class="error">*Ce champ est requis</div>
+                    <ng-template #elseBlock>
+                        <div class="pwdRequire">*Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 caractère spécial.</div>
+                    </ng-template>
+                </div>
+                <div class="pwdConfirm">
+                    <label for="pwdConfirm">Mot de passe : </label>
+                    <input 
+                        id="pwdConfirm"
+                        placeholder="Saisir à nouveau votre mot de passe" 
+                        type="password" 
+                        formControlName="pwdConfirm">
+                    <div *ngIf="isFieldValid('pwdConfirm')" class="error">*Ce champ est requis</div>
+                </div>
+                <div class="pseudo">
+                    <label for="pseudo">Pseudo : </label>
+                    <input 
+                        id="pseudo"
+                        placeholder="Saisir votre pseudo" 
+                        type="text" 
+                        formControlName="pseudo">
+                    <div *ngIf="isFieldValid('pseudo')" class="error">*Ce champ est requis</div>
                 </div>
             </div>
             <div class="submit">
-                <button type="submit" [disabled]="formGroup.invalid">Se connecter</button>
+                <button type="submit" [disabled]="formGroup.invalid">S'inscrire</button>
             </div>
         </form>
     </article>

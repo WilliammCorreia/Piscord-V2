@@ -42,6 +42,8 @@ Créer un fichier `.env` :
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/piscord
 JWT_SECRET=votre-secret-key
+FRONTEND_ADDRESS=http://localhost:4200
+INSOMNIA_ADDRESS=http://localhost:8005
 ```
 
 Lancer le serveur :
@@ -68,6 +70,7 @@ piscord/
 │    ├── services/         # Services métier
 │    ├── repositories/     # Accès aux données
 │    ├── models/           # Schémas MongoDB
+│    ├── validators/       # Validation des données
 │    ├── middleware/       # Middlewares transversaux
 │    └── server.js         # Point d'entrée
 │

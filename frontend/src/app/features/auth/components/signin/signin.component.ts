@@ -30,7 +30,7 @@ export class SigninComponent {
     if (this.formGroup.valid) {
       const credentials = this.formGroup.value;
 
-      const res = this.authService.signin(credentials).subscribe({
+      this.authService.signin(credentials).subscribe({
         next: (res) => {
           console.log("Connexion réussie : ", res);
         },
