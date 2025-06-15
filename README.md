@@ -40,7 +40,7 @@ npm install
 Créer un fichier `.env` :
 ```
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/piscord
+MONGODB_URI=mongodb://mongodb:27017/piscord
 JWT_SECRET=votre-secret-key
 FRONTEND_ADDRESS=http://localhost:4200
 INSOMNIA_ADDRESS=http://localhost:8005

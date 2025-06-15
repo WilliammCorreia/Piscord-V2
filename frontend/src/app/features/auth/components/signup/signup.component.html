@@ -16,6 +16,7 @@
                         <div *ngIf="formGroup.get('email')?.hasError('required')">*Ce champ est requis</div>
                         <div *ngIf="formGroup.get('email')?.hasError('email')">*Ce champ nécessite un email valide</div>
                     </div>
+                    <div *ngIf="isEmailAlreadyUsed && !isFieldValid('email')" class="error">*Email déjà utilisé</div>
                 </div>
                 <div class="password">
                     <label for="password">Mot de passe : </label>
@@ -24,20 +25,28 @@
                         placeholder="Saisir votre mot de passe" 
                         type="password" 
                         formControlName="password">
-                    <div *ngIf="isFieldValid('password'); else elseBlock" class="error">*Ce champ est requis</div>
-                    <ng-template #elseBlock>
-                        <div class="pwdRequire">*Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 caractère spécial.</div>
-                    </ng-template>
+                    <div *ngIf="isFieldValid('password')" class="pwdRequire">
+                        <div *ngIf="formGroup.get('password')?.hasError('required')" class="error">*Ce champ est requis</div>
+                        <div *ngIf="formGroup.get('password')?.hasError('pattern')" class="error">
+                            *Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.
+                        </div>
+                    </div>
+                    <div *ngIf="!formGroup.get('password')?.touched" class="pwdRequire">
+                        *Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.
+                    </div>
                 </div>
                 <div class="pwdConfirm">
-                    <label for="pwdConfirm">Mot de passe : </label>
+                    <label for="pwdConfirm">Confirmer le mot de passe : </label>
                     <input 
                         id="pwdConfirm"
                         placeholder="Saisir à nouveau votre mot de passe" 
                         type="password" 
                         formControlName="pwdConfirm">
-                    <div *ngIf="isFieldValid('pwdConfirm')" class="error">*Ce champ est requis</div>
-                </div>
+                    <div *ngIf="isFieldValid('pwdConfirm') && !hasPasswordMismatch()" class="error">
+                        <div *ngIf="formGroup.get('pwdConfirm')?.hasError('required')">*Ce champ est requis</div>
+                    </div>
+                    <div *ngIf="hasPasswordMismatch()" class="error">*Les mots de passe ne correspondent pas</div>
+                    </div>
                 <div class="pseudo">
                     <label for="pseudo">Pseudo : </label>
                     <input 
@@ -45,7 +54,11 @@
                         placeholder="Saisir votre pseudo" 
                         type="text" 
                         formControlName="pseudo">
-                    <div *ngIf="isFieldValid('pseudo')" class="error">*Ce champ est requis</div>
+                    <div *ngIf="isFieldValid('pseudo')" class="error">
+                        <div *ngIf="formGroup.get('pseudo')?.hasError('required')">*Ce champ est requis</div>
+                        <div *ngIf="formGroup.get('pseudo')?.hasError('pattern')">*Le pseudo ne doit pas contenir d'espaces</div>
+                        <div *ngIf="formGroup.get('pseudo')?.hasError('maxlength')">*Maximum 24 caractères</div>
+                    </div>
                 </div>
             </div>
             <div class="submit">
