@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, maxlength: 24 },
     avatarUrl: { type: String },
     displayStatus: { type: Boolean },
+    serverIds: { type: [String] },
     lastConnection: { type: Date },
 }, { timestamps : true });
 
