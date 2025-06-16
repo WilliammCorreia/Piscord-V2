@@ -132,29 +132,24 @@ class AuthService {
 
             refreshToken = jwt.verify(refreshToken, process.env.JWT_SECRET);
 
-            if (refreshToken.iat < refreshToken.exp) {
-                const user = await UserRepository.findByUserId(refreshToken.user);
+            const user = await UserRepository.findByUserId(refreshToken.user);
 
-                const payload = {
-                    userId: user._id,
-                    email: user.email,
-                    username: user.username
-                };
-                
-                const accessToken = jwt.sign(
-                    payload, 
-                    process.env.JWT_SECRET,
-                    { expiresIn: '15min'}
-                );
+            const payload = {
+                userId: user._id,
+                email: user.email,
+                username: user.username
+            };
+            
+            const accessToken = jwt.sign(
+                payload, 
+                process.env.JWT_SECRET,
+                { expiresIn: '15min'}
+            );
 
-                return accessToken;
-            }
-            else {
-                return false;
-            }
+            return accessToken;
         }
         catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 }

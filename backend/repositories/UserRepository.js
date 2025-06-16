@@ -39,6 +39,11 @@ class UserRepository {
         const user = await User.findOne({ _id: userId });
         return user;
     }
+
+    async findServerIdsById(userId) {
+        const user = await User.find({ _id: userId }, 'serverIds');
+        return user;
+    }
 }
 
 module.exports = new UserRepository();
