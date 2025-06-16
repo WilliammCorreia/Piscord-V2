@@ -50,9 +50,13 @@ export class SigninComponent {
           console.log("Connexion réussie : ", res);
         },
         error: (err) => {
-          this.isLoginFailed = true;
-          this.formGroup.reset();
-          console.error('Erreur de connexion:', err);
+          if (err.error?.erreur === "Mot de passe incorrect." || err.error?.erreur === "Email introuvable." ) {
+            this.isLoginFailed = true;
+            this.formGroup.reset();
+          } else {
+            console.error('Erreur lors de la connexion:', err);
+            alert("Une erreur est survenue, veuillez ressayer plus tard.");
+          }
         }
       });
     } else {
