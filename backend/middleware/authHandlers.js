@@ -25,23 +25,30 @@ exports.handleAuthErrors = async (req, res, next) => {
         
         if (err.name === "TokenExpiredError") {
             try {
-                const newAccessToken = await AuthService.refresh(req.cookies);
+                console.log("1.");
+                const newAccessToken = await AuthService.refresh(req.cookies.refreshToken);
+                console.log("2.");
 
                 if (newAccessToken) {
+                    console.log("3.");
+
                     res.cookie("accessToken", newAccessToken, {
                         httpOnly: true,
                         secure: false,
                         sameSite: 'strict'
                     });
+                    console.log("4.");
 
                     jwt.verify(newAccessToken, process.env.JWT_SECRET);
+                    console.log("5.");
 
                     return next();
                 } 
                 else {
+                    console.log("6.");
                     res.clearCookie("accessToken");
                     res.clearCookie("refreshToken");
-                    
+                    console.log("7.");
                     return res.status(401).json({
                         success: false,
                         code: "REFRESH_FAILED",
@@ -52,6 +59,7 @@ exports.handleAuthErrors = async (req, res, next) => {
             catch (refreshErr) {
                 res.clearCookie("accessToken");
                 res.clearCookie("refreshToken");
+                console.log(refreshErr);
                 
                 return res.status(401).json({
                     success: false,

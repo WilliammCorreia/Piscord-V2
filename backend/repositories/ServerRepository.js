@@ -3,7 +3,11 @@ const Server = require("../models/Server");
 class ServerRepository {
 
     async create(name, ownerId) {
-        const server = new Server({ name, ownerId });
+        const server = new Server({ 
+            name, 
+            ownerId,
+            memberIds: [ownerId],
+        });
         return await server.save();
     }
 

@@ -40,7 +40,16 @@ class UserRepository {
         return user;
     }
 
-    async findServerIdsById(userId) {
+    async addServerId(userId, serverId) {
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $push: { serverIds: serverId }},
+            { new: true }
+        );
+        return user;
+    }
+
+    async findServerIdsByUserId(userId) {
         const user = await User.find({ _id: userId }, 'serverIds');
         return user;
     }

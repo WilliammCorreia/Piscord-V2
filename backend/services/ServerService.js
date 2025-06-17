@@ -8,13 +8,14 @@ class ServerService {
         const userInfo = jwt.verify(token, process.env.JWT_SECRET);
 
         const server = await ServerRepository.create(serverName, userInfo.userId);
-        return server;
+        const user = await UserRepository.addServerId(userInfo.userId, server._id);
+        return { server, user };
     };
 
     async getUserServers(token) {
         const userInfo = jwt.verify(token, process.env.JWT_SECRET);
 
-        const serverIds = await UserRepository.findServerIdsById(userInfo.userId);
+        const serverIds = await UserRepository.findServerIdsByUserId(userInfo.userId);
         const servers = await ServerRepository.findServersByIds(serverIds[0].serverIds);
         console.log(serverIds[0].serverIds); 
 
