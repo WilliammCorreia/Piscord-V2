@@ -31,8 +31,7 @@ class AuthController {
             res.cookie("refreshToken", result.tokens.refreshToken, {
                 httpOnly: true,
                 secure: false,
-                sameSite: true,
-                path: "/api/auth"
+                sameSite: 'strict'
             });
 
             return res.status(201).json({ 
@@ -73,8 +72,7 @@ class AuthController {
             res.cookie("refreshToken", result.tokens.refreshToken, {
                 httpOnly: true,
                 secure: false,
-                sameSite: true,
-                path: "/api/auth"
+                sameSite: 'strict'
             });
 
             return res.status(200).json({ 

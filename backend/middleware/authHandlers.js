@@ -17,38 +17,32 @@ exports.handleAuthErrors = async (req, res, next) => {
     }
     
     try {
-        jwt.verify(accessToken, process.env.JWT_SECRET);
+        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+        req.user = decoded;
+
         return next();
     }
     catch (err) {
-        console.log("Erreur JWT:", err.message);
-        
         if (err.name === "TokenExpiredError") {
             try {
-                console.log("1.");
-                const newAccessToken = await AuthService.refresh(req.cookies.refreshToken);
-                console.log("2.");
+                const newAccessToken = await AuthService.refresh(req.cookies);
 
                 if (newAccessToken) {
-                    console.log("3.");
 
                     res.cookie("accessToken", newAccessToken, {
                         httpOnly: true,
                         secure: false,
                         sameSite: 'strict'
                     });
-                    console.log("4.");
 
-                    jwt.verify(newAccessToken, process.env.JWT_SECRET);
-                    console.log("5.");
+                    const decoded = jwt.verify(newAccessToken, process.env.JWT_SECRET);
+                    req.user = decoded;
 
                     return next();
                 } 
                 else {
-                    console.log("6.");
                     res.clearCookie("accessToken");
                     res.clearCookie("refreshToken");
-                    console.log("7.");
                     return res.status(401).json({
                         success: false,
                         code: "REFRESH_FAILED",
@@ -59,7 +53,6 @@ exports.handleAuthErrors = async (req, res, next) => {
             catch (refreshErr) {
                 res.clearCookie("accessToken");
                 res.clearCookie("refreshToken");
-                console.log(refreshErr);
                 
                 return res.status(401).json({
                     success: false,
