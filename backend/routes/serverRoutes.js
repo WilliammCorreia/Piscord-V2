@@ -4,7 +4,7 @@ const ServerController = require("../controllers/ServerController");
 
 const router = express.Router();
 
-router.post('/create', AuthMiddleware.handleAuthErrors, ServerController.create);
-router.get('/userServers', AuthMiddleware.handleAuthErrors, ServerController.getUserServers);
+router.post('/', AuthMiddleware.handleAuthErrors, ServerController.create);
+router.get('/user', AuthMiddleware.handleAuthErrors, ServerController.getByUserId);
 
 module.exports = router;

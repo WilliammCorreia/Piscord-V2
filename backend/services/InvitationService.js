@@ -13,6 +13,16 @@ class InvitationService {
     }
 
     /**
+     * Indique si un utilisateur est membre du serveur
+     * @param {Object} server - Objet contenant les informations sur le serveur nottament la liste de membres
+     * @param {String} userId - ID de l'utilisateur à vérifier
+     * @returns {boolean} Retourne `true` si l'utilisateur appartient au serveur, sinon `false`
+     */
+    checkIfMember(server, userId) {
+        return server.memberIds.some(member => member._id.toString() === userId);
+    }
+
+    /**
      * Crée une nouvelle invitation pour un serveur
      * @param {String} serverId - ID du serveur
      * @param {String} createdBy - ID de l'utilisateur créateur
@@ -22,12 +32,11 @@ class InvitationService {
     async createInvitation(serverId, createdBy, options = {}) {
         try {
             const server = await ServerRepository.findById(serverId);
-            console.log(server)
             if (!server) {
                 throw new Error("Serveur introuvable");
             }
 
-            if (!server.memberIds.includes(createdBy)) {
+            if (!this.checkIfMember(server, createdBy)) {
                 throw new Error("Vous devez être membre du serveur pour créer une invitation");
             }
             
@@ -130,7 +139,7 @@ class InvitationService {
             }
 
             const server = await ServerRepository.findById(invitation.serverId._id);
-            if (server.memberIds.includes(userId)) {
+            if (this.checkIfMember(server, userId)) {
                 throw new Error("Vous êtes déjà membre de ce serveur");
             }
 

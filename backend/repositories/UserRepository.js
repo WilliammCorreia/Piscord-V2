@@ -50,7 +50,7 @@ class UserRepository {
     }
 
     async findServerIdsByUserId(userId) {
-        const user = await User.find({ _id: userId }, 'serverIds');
+        const user = await User.findOne({ _id: userId }, 'serverIds');
         return user;
     }
 }

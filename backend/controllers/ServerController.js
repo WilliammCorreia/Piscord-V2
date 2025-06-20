@@ -2,6 +2,12 @@ const ServerService = require("../services/ServerService");
 
 class ServerController {
 
+    /**
+     * Crée un nouveau serveur.
+     * @param {object} req - L'objet requête Express.
+     * @param {object} res - L'objet réponse Express.
+     * @returns {Promise<object>} Une réponse JSON contenant le succès, les données (serveur et utilisateur), et un message.
+     */
     async create(req, res) {
         try {
             const serverName = req.body.name;
@@ -23,11 +29,17 @@ class ServerController {
         }
     };
 
-    async getUserServers(req, res) {
+    /**
+     * Récupère la liste des serveurs auxquels un utilisateur appartient.
+     * @param {object} req - L'objet requête Express.
+     * @param {object} res - L'objet réponse Express.
+     * @returns {Promise<object>} Une réponse JSON contenant le succès, les données (liste des serveurs), et un message.
+     */
+    async getByUserId(req, res) {
         try {
             const userInfo = req.user;
 
-            const result = await ServerService.getUserServers(userInfo);
+            const result = await ServerService.getByUserId(userInfo);
 
             return res.status(200).json({
                 success: true,
