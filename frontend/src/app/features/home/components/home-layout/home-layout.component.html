@@ -1,0 +1,22 @@
+<div class="content">
+    <aside>
+        <header>
+            <a routerLink="/auth">
+                <h2>Piscord</h2>
+            </a>
+        </header>
+        <section>
+            <div class="title">
+                <h3>Catégories</h3>
+            </div>
+            <article>
+                <a routerLink="/home/profile" routerLinkActive="active"># Profil</a>
+                <a routerLink="/auth/server" routerLinkActive="active"># Serveur</a>
+                <a (click)="onDisconnect()"># Déconnexion</a>
+            </article>
+        </section>
+    </aside>
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+</div>

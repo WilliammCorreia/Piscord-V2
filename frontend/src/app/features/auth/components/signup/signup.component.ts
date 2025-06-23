@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from '../../services/auth.service';
 import { SignupRequest } from '../../models/auth.model';
+import { Router } from '@angular/router';
 
 /**
  * Composant d'inscription utilisateur
@@ -30,7 +31,10 @@ export class SignupComponent implements OnInit, OnDestroy {
    * Constructeur du composant
    * @param authService Service d'authentification pour les appels API
    */
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   /**
    * Initialise le composant
@@ -98,7 +102,7 @@ export class SignupComponent implements OnInit, OnDestroy {
 
       this.authService.signup(credentials).subscribe({
         next: (res) => {
-          console.log("Inscription réussie : ", res);
+          this.router.navigate(["/home"]);
         },
         error: (err) => {
           if (err.error?.erreur === "Email déjà utilisé.") {

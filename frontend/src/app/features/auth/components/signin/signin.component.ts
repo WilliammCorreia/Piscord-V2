@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { SigninRequest } from '../../models/auth.model';
+import { Router } from '@angular/router';
 
 /**
  * Composant de connexion utilisateur
@@ -25,7 +26,8 @@ export class SigninComponent {
    */
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.formGroup = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -46,8 +48,8 @@ export class SigninComponent {
       const credentials: SigninRequest = this.formGroup.value;
 
       this.authService.signin(credentials).subscribe({
-        next: (res) => {
-          console.log("Connexion réussie : ", res);
+        next: () => {
+          this.router.navigate(["/home"]);
         },
         error: (err) => {
           if (err.error?.erreur === "Mot de passe incorrect." || err.error?.erreur === "Email introuvable." ) {
