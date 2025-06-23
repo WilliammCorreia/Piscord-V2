@@ -6,7 +6,12 @@ const routes: Routes = [
   {
     path: "",
     component: HomeLayoutComponent,
-    children: []
+    children: [
+      {
+        path: "server",
+        loadChildren: () => import("./components/server/server-module").then(m => m.ServerModule)
+      }
+    ]
   }
 ];
 
