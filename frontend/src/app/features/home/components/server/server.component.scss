@@ -1,5 +1,6 @@
 .content {
     height: 100%;
+    width: 100%
 }
 
 header {
@@ -11,7 +12,7 @@ header {
 }
 
 aside {
-    width: 22.5%;
+    width: 28%;
     height: 100vh;
     border-right: 2px solid var(--bg-secondary);
 }
@@ -26,10 +27,6 @@ a {
 
 section {
     padding: var(--spacing-sm);
-}
-
-main {
-    width: 100%;
 }
 
 .title {
@@ -59,4 +56,9 @@ article a {
 .container {
     display: flex;
     flex-direction: row;
+    width: 100%;
+}
+
+.main {
+    width: 72%;
 }

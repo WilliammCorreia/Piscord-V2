@@ -1,1 +1,10 @@
-<p>list works!</p>
+<div class="content">
+    <header>
+        <h1># Lister</h1>
+    </header>
+    <div class="container">
+        <ul *ngFor="let server of servers">
+            <li><a routerLink="">{{ server.name }}</a></li>
+        </ul>
+    </div>
+</div>

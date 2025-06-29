@@ -1,0 +1,33 @@
+.content {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-2xl);
+    height: 3.75rem;
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+h1 {
+    font-size: 1.065rem;
+}
+
+ul {
+    margin: var(--spacing-2xl);
+    width: 100%;
+}
+
+li { 
+    list-style: none;
+    font-size: 0.875rem;
+    letter-spacing: 0.05rem;
+    width: 90%;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-primary);
+}
