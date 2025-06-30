@@ -1,0 +1,27 @@
+<div class="content">
+    <header>
+        <h1># Créer</h1>
+    </header>
+    <div class="container">
+        <form [formGroup]="formGroup" (submit)="onSubmit($event)">
+            <div class="inputs">
+                <div class="name">
+                    <label for="name">Nom : </label>
+                    <input 
+                        id="name" 
+                        name="name"
+                        type="text" 
+                        formControlName="name">
+                    <div *ngIf="isFieldValid('name')" class="error">
+                        <div *ngIf="formGroup.get('name')?.hasError('required')">*Ce champ est requis</div>
+                        <div *ngIf="formGroup.get('name')?.hasError('minlength')">*Minimum 3 caractères</div>
+                        <div *ngIf="formGroup.get('name')?.hasError('maxlength')">*Maximum 32 caractères</div>
+                    </div>
+                </div>
+            </div>
+            <div class="submit">
+                <button type="submit" [disabled]="formGroup.invalid">Créer</button>
+            </div>
+        </form>
+    </div>
+</div>
