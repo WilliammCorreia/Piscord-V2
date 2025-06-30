@@ -8,6 +8,7 @@ header {
     align-items: center;
     padding: 0 var(--spacing-2xl);
     height: 3.75rem;
+    width: 100%;
     border-bottom: 2px solid var(--bg-secondary);
 }
 
@@ -16,7 +17,7 @@ h1 {
 }
 
 ul {
-    margin: var(--spacing-2xl);
+    padding: var(--spacing-2xl);
     width: 100%;
 }
 
@@ -25,6 +26,7 @@ li {
     font-size: 0.875rem;
     letter-spacing: 0.05rem;
     width: 90%;
+    margin-bottom: var(--spacing-lg)
 }
 
 a {

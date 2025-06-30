@@ -3,8 +3,10 @@
         <h1># Lister</h1>
     </header>
     <div class="container">
-        <ul *ngFor="let server of servers">
-            <li><a routerLink="">{{ server.name }}</a></li>
+        <ul>
+            <li *ngFor="let server of servers">
+                <a routerLink="">{{ server.name }}</a>
+            </li>
         </ul>
     </div>
 </div>

@@ -11,9 +11,16 @@ header {
     border-bottom: 2px solid var(--bg-secondary);
 }
 
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
 aside {
     width: 28%;
-    height: 100vh;
+    flex-shrink: 0;
     border-right: 2px solid var(--bg-secondary);
 }
 
@@ -53,12 +60,6 @@ article a {
     }
 }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
 .main {
-    width: 72%;
+    flex-grow: 1;
 }
