@@ -26,7 +26,7 @@ class UserRepository {
      * @returns {Promise<Object|null>} L'utilisateur trouvé ou null si aucun résultat
      */
     async findByEmail(email) {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).select('-hashPassword');
         return user;
     }
 
@@ -36,7 +36,7 @@ class UserRepository {
      * @returns {Promise<Object|null>} L'utilisateur trouvé ou null si aucun résultat
      */
     async findByUserId(userId) {
-        const user = await User.findOne({ _id: userId });
+        const user = await User.findOne({ _id: userId }).select('-hashPassword');
         return user;
     }
 
@@ -45,12 +45,12 @@ class UserRepository {
             userId,
             { $push: { serverIds: serverId }},
             { new: true }
-        );
+        ).select('-hashPassword');
         return user;
     }
 
     async findServerIdsByUserId(userId) {
-        const user = await User.findOne({ _id: userId }, 'serverIds');
+        const user = await User.findOne({ _id: userId }, 'serverIds').select('-hashPassword');
         return user;
     }
 }
