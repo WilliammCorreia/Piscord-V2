@@ -26,7 +26,7 @@ class UserRepository {
      * @returns {Promise<Object|null>} L'utilisateur trouvé ou null si aucun résultat
      */
     async findByEmail(email) {
-        const user = await User.findOne({ email }).select('-hashPassword');
+        const user = await User.findOne({ email });
         return user;
     }
 
