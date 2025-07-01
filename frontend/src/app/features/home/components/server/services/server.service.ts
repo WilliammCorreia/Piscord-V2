@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ErrorResponse, UserServersResponse } from '../models/server.model';
+import { CreateServerRequest, CreateServerResponse, ErrorResponse, UserServersResponse } from '../models/server.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,12 @@ export class ServerService {
   getServerByUser(): Observable<UserServersResponse | ErrorResponse> {
     return this.http.get<UserServersResponse | ErrorResponse>(`${this.url}/user`, {
       withCredentials: true,
+    });
+  }
+
+  createServer(name: CreateServerRequest): Observable<CreateServerResponse | ErrorResponse> {
+    return this.http.post<CreateServerResponse | ErrorResponse>(`${this.url}/`, name, {
+      withCredentials: true
     });
   }
 }
