@@ -38,9 +38,9 @@ export class CreateComponent {
         next: (res) => {
           if (this.isCreateServerResponse(res)) {
             const id = res.data?.server._id;
-            // this.router.navigate(["server/", id]);
+            this.router.navigate([`/server/${id}`]);
           }
-        },
+        },  
         error: (err) => {
           console.error("Erreur la création du serveur: ", err);
           alert("Une erreur est survenue, veuillez ressayer plus tard.");
