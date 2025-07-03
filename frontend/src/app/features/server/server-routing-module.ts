@@ -11,7 +11,7 @@ const routes: Routes = [
     children: [
       { path: "", redirectTo: "welcome", pathMatch: "full" },
       { path: "welcome", component: WelcomeComponent },
-      { path: ":channelId", component: ChatComponent }
+      { path: "channel/:channelId", component: ChatComponent }
     ]
   }
 ];
@@ -20,4 +20,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HomeRoutingModule { }
+export class ServerRoutingModule { }

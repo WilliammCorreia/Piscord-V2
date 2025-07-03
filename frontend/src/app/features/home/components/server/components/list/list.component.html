@@ -5,7 +5,7 @@
     <div class="container">
         <ul>
             <li *ngFor="let server of servers">
-                <a routerLink="">{{ server.name }}</a>
+                <a [routerLink]="['/server', server._id]">{{ server.name }}</a>
             </li>
         </ul>
     </div>
