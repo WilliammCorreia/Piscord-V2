@@ -1,7 +1,7 @@
 <div class="content">
     <aside>
         <header>
-            <a routerLink="/auth">
+            <a routerLink="/home">
                 <h2>Piscord</h2>
             </a>
         </header>
@@ -21,7 +21,11 @@
                     <h3>Salons</h3>
                 </div>
                 <article>
-                    <a routerLink="/auth/signup" routerLinkActive="active"># Inscription</a>
+                    <ng-container *ngFor="let channel of channels">
+                        <a [routerLink]="['channel', channel._id]" routerLinkActive="active">
+                            # {{channel.name}}
+                        </a>
+                    </ng-container>
                 </article>
             </div>
         </section>

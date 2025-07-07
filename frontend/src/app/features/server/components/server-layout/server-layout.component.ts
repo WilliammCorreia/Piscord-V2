@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ServerService } from '../../../home/components/server/services/server.service';
-import { ErrorResponse, Member, ServersResponse } from '../../models/server';
+import { ServerService } from '../../services/server/server.service';
+import { ChannelService } from '../../services/channel/channel.service';
+import { ErrorResponse, Member, ServersResponse } from '../../models/server.model';
+import { Channel, ChannelsResponse } from '../../models/channel.model';
 
 @Component({
   selector: 'app-server-layout',
@@ -12,6 +14,7 @@ import { ErrorResponse, Member, ServersResponse } from '../../models/server';
 export class ServerLayoutComponent {
   id: string | null = "";
   members: Member[] = [];
+  channels: Channel[] = [];
 
   /**
    * Constructeur du composant ServerLayout
@@ -20,7 +23,8 @@ export class ServerLayoutComponent {
    */
   constructor(
     private route: ActivatedRoute,
-    private serverService: ServerService
+    private serverService: ServerService,
+    private channelService: ChannelService
   ) { }
 
   /**
@@ -30,6 +34,7 @@ export class ServerLayoutComponent {
     this.id = this.route.snapshot.paramMap.get("id");
     if (typeof this.id === "string") {
       await this.listUsers(this.id);
+      await this.listChannels(this.id);
     }
   }
 
@@ -39,6 +44,15 @@ export class ServerLayoutComponent {
    * @returns true si la réponse est un ServersResponse, false sinon
    */
   isServersResponse(res: ServersResponse | ErrorResponse): res is ServersResponse {
+    return res.success === true;
+  }
+
+    /**
+   * Vérifie si la réponse est de type ChannelsResponse
+   * @param res Réponse à vérifier
+   * @returns true si la réponse est un ChannelsResponse, false sinon
+   */
+  isChannelsResponse(res: ChannelsResponse | ErrorResponse): res is ChannelsResponse {
     return res.success === true;
   }
 
@@ -64,6 +78,23 @@ export class ServerLayoutComponent {
         console.error("Erreur la récupération des membres:", err);
         alert("Une erreur est survenue, veuillez ressayer plus tard.");
       }
-    })
+    });
+  }
+
+  async listChannels(serverId: string) {
+    this.channels = [];
+
+    this.channelService.getChannelByServer(serverId).subscribe({
+      next: (res) => {
+        if (this.isChannelsResponse(res)) {
+          this.channels = res.data;
+          console.log(this.channels)
+        }
+      },
+      error: (err) => {
+        console.error("Erreur la récupération des salons:", err);
+        alert("Une erreur est survenue, veuillez ressayer plus tard.");
+      }
+    });
   }
 }
