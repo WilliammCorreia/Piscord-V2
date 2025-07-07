@@ -13,11 +13,19 @@ export class ServerLayoutComponent {
   id: string | null = "";
   members: Member[] = [];
 
+  /**
+   * Constructeur du composant ServerLayout
+   * @param route Service pour accéder aux paramètres de route
+   * @param serverService Service pour les opérations liées aux serveurs
+   */
   constructor(
     private route: ActivatedRoute,
     private serverService: ServerService
   ) { }
 
+  /**
+   * Initialise le composant en récupérant l'ID du serveur depuis l'URL et charge la liste des utilisateurs
+   */
   async ngOnInit() {
     this.id = this.route.snapshot.paramMap.get("id");
     if (typeof this.id === "string") {
@@ -25,10 +33,19 @@ export class ServerLayoutComponent {
     }
   }
 
+  /**
+   * Vérifie si la réponse est de type ServersResponse
+   * @param res Réponse à vérifier
+   * @returns true si la réponse est un ServersResponse, false sinon
+   */
   isServersResponse(res: ServersResponse | ErrorResponse): res is ServersResponse {
     return res.success === true;
   }
 
+  /**
+   * Récupère la liste des membres d'un serveur spécifique
+   * @param serverId ID du serveur dont on veut récupérer les membres
+   */
   async listUsers(serverId: string) {
     this.members = [];
 
