@@ -1,0 +1,62 @@
+.content {
+    display: flex;
+    width: 100%;
+}
+
+aside {
+    width: 33.3%;
+    height: 100vh;
+    border-right: 2px solid var(--bg-secondary);
+}
+
+header {
+    height: 2.5rem;
+    padding: var(--spacing-sm);
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+a {
+    text-decoration: none;
+}
+
+section {
+    display: flex;
+}
+
+.users, .channels {
+    margin-left: var(--spacing-sm);
+    flex: 1;
+    height: calc(100vh - 2.5rem);
+}
+
+.users {
+    border-right: 2px solid var(--bg-secondary);
+}
+
+main {
+    width: 100%;
+}
+
+.title {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+article {
+    padding: var(--spacing-sm) 0;
+}
+
+article a, article li {
+    margin: 0 var(--spacing-md);
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.05rem;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+
+    &.active {
+        color: var(--text-primary);
+    }
+}
