@@ -4,6 +4,7 @@ import { ServerLayoutComponent } from './components/server-layout/server-layout.
 import { ChatComponent } from './components/chat/chat.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ServerRoutingModule } from './server-routing-module';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -15,7 +16,8 @@ import { ServerRoutingModule } from './server-routing-module';
   ],
   imports: [
     CommonModule,
-    ServerRoutingModule
+    ServerRoutingModule,
+    FormsModule
   ]
 })
 export class ServerModule { }
