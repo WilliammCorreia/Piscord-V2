@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from '../../services/auth.service';
-import { SignupRequest } from '../../models/auth.model';
+import { SignupRequest, SignupResponse, ErrorResponse } from '../../models/auth.model';
 import { Router } from '@angular/router';
 
 /**
@@ -44,6 +44,15 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.subscription = this.formGroup.get("email")?.valueChanges.subscribe(() => {
       this.isEmailAlreadyUsed = false;
     });
+  }
+
+  /**
+   * Vérifie si la réponse est de type SignupResponse (succès) ou ErrorResponse (échec)
+   * @param res Réponse à vérifier, peut être SignupResponse ou ErrorResponse
+   * @returns true si la réponse est un SignupResponse (succès), false si c'est une ErrorResponse (échec)
+   */
+  isSignupResponse(res: SignupResponse | ErrorResponse): res is SignupResponse {
+    return res.success === true;
   }
 
   /**
@@ -102,7 +111,10 @@ export class SignupComponent implements OnInit, OnDestroy {
 
       this.authService.signup(credentials).subscribe({
         next: (res) => {
-          this.router.navigate(["/home"]);
+          if (this.isSignupResponse(res)) {
+            this.authService.setUser(res.data);
+            this.router.navigate(["/home"]);
+          }
         },
         error: (err) => {
           if (err.error?.erreur === "Email déjà utilisé.") {

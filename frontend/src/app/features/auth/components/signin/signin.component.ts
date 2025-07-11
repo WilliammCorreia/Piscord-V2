@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { SigninRequest } from '../../models/auth.model';
+import { ErrorResponse, SigninRequest, SigninResponse } from '../../models/auth.model';
 import { Router } from '@angular/router';
 
 /**
@@ -34,6 +34,15 @@ export class SigninComponent {
       password: ['', [Validators.required]]
     });
   }
+  
+  /**
+   * Vérifie si la réponse est de type SigninResponse (succès) ou ErrorResponse (échec)
+   * @param res Réponse à vérifier, peut être SigninResponse ou ErrorResponse
+   * @returns true si la réponse est un SigninResponse (succès), false si c'est une ErrorResponse (échec)
+   */
+  isSigninResponse(res: SigninResponse | ErrorResponse): res is SigninResponse {
+    return res.success === true;
+  }
 
   /**
    * Gère la soumission du formulaire de connexion
@@ -48,8 +57,11 @@ export class SigninComponent {
       const credentials: SigninRequest = this.formGroup.value;
 
       this.authService.signin(credentials).subscribe({
-        next: () => {
-          this.router.navigate(["/home"]);
+        next: (res) => {
+          if (this.isSigninResponse(res)) {
+            this.authService.setUser(res.data);
+            this.router.navigate(["/home"]);
+          }
         },
         error: (err) => {
           if (err.error?.erreur === "Mot de passe incorrect." || err.error?.erreur === "Email introuvable." ) {

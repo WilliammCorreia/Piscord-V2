@@ -1,3 +1,8 @@
+export interface UserData {
+  email: string;
+  username: string;
+}
+
 // Requests
 export interface SigninRequest {
   email: string;

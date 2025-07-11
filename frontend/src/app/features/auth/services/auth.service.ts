@@ -6,7 +6,8 @@ import {
   SigninResponse, 
   SignupRequest, 
   SignupResponse, 
-  ErrorResponse 
+  ErrorResponse, 
+  UserData
 } from '../models/auth.model';
 
 /**
@@ -18,12 +19,27 @@ import {
 })
 export class AuthService {
   private readonly apiUrl = 'http://localhost:3000/api/auth';
+  private userData: UserData | null = null;
 
   /**
    * Constructeur du service
    * @param http Client HTTP Angular pour les requêtes API
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    const saved = localStorage.getItem("user");
+    if (saved) {
+      this.userData = JSON.parse(saved);
+    }
+  }
+
+  /**
+   * Sauvegarde les données utilisateur dans le localStorage
+   * @param user Données de l'utilisateur à sauvegarder
+   */
+  setUser(user: UserData): void {
+    this.userData = user;
+    localStorage.setItem("user", JSON.stringify(user));
+  }
 
   /**
    * Authentifie un utilisateur avec ses identifiants
@@ -45,5 +61,21 @@ export class AuthService {
     return this.http.post<SignupResponse | ErrorResponse>(`${this.apiUrl}/signup`, credentials, {
       withCredentials: true
     });
+  }
+
+  /**
+   * Récupère les données de l'utilisateur actuellement connecté
+   * @returns Données de l'utilisateur ou null si non connecté
+   */
+  get user(): UserData | null {
+    return this.userData;
+  }
+
+  /**
+   * Déconnecte l'utilisateur et nettoie les données locales
+   */
+  logout(): void {
+    this.userData = null;
+    localStorage.removeItem("user");
   }
 }

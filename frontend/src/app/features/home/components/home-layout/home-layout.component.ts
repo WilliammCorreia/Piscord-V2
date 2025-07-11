@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HomeService } from '../../services/home.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-home-layout',
@@ -12,12 +13,14 @@ export class HomeLayoutComponent {
 
   constructor(
     private homeService: HomeService,
+    private authService: AuthService,
     private router: Router
   ) { }
 
   onDisconnect(): void {
     this.homeService.disconnect().subscribe({
       next: (res) => {
+        this.authService.logout();
         this.router.navigate(["/auth"]);
       },
       error: (err) => {
