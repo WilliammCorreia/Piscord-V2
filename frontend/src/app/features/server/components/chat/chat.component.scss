@@ -71,10 +71,19 @@ main {
 }
 
 .photo {
-    background-color: #D9D9D9;
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
+    background: var(--primary-color, #667eea);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 span {

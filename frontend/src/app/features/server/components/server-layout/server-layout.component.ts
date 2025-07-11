@@ -75,7 +75,7 @@ export class ServerLayoutComponent {
         }
       },
       error: (err) => {
-        console.error("Erreur la récupération des membres:", err);
+        console.error("Erreur lors de la récupération des membres: ", err);
         alert("Une erreur est survenue, veuillez ressayer plus tard.");
       }
     });
@@ -92,7 +92,7 @@ export class ServerLayoutComponent {
         }
       },
       error: (err) => {
-        console.error("Erreur la récupération des salons:", err);
+        console.error("Erreur lors de la récupération des salons: ", err);
         alert("Une erreur est survenue, veuillez ressayer plus tard.");
       }
     });

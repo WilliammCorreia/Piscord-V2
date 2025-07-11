@@ -12,7 +12,9 @@ class MessageRepository {
      */
     async create(content, authorId, referenceId, isDeleted = false) {
         const message = new Message({content, authorId, referenceId, isDeleted});
-        return await message.save();
+        await message.save();
+        await message.populate('authorId', 'username');
+        return message;
     }
 
     /**
@@ -24,7 +26,7 @@ class MessageRepository {
     async findLastMessagesByReference(referenceId, skip = 0) {
         return await Message
             .find({ referenceId })
-            .sort({ createdAt: -1 })
+            .sort({ createdAt: 1 })
             .skip(skip)
             .limit(50)
             .populate('authorId', 'username')
