@@ -4,6 +4,7 @@ import { MessageService } from '../../services/message/message.service';
 import { Message, MessageResponse, MessagesResponse } from '../../models/message.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ErrorResponse } from '../../models/server.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -17,6 +18,7 @@ export class ChatComponent {
   private channelId: string | null = "";
   textMessage: string = "";
   protected messages: Message[] = [];
+  private subscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,10 +30,17 @@ export class ChatComponent {
    * Initialise le composant en récupérant l'ID du serveur depuis l'URL et charge la liste des utilisateurs
    */
   async ngOnInit() {
-    this.channelId = this.route.snapshot.paramMap.get("channelId");
-    if (this.channelId) {
-      await this.loadMessages();
-    }
+    this.subscription = this.route.paramMap.subscribe(async (params) => {
+      this.channelId = params.get("channelId");
+      if (this.channelId) {
+        this.messages = [];
+        await this.loadMessages();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   /**
@@ -70,7 +79,6 @@ export class ChatComponent {
         if (this.isMessagesResponse(res)) {
           this.messages = res.data || [];
         }
-        console.log("messages : ", this.messages);
       },
       error: (err) => {
         console.error("Erreur lors du chargement des messages: ", err);

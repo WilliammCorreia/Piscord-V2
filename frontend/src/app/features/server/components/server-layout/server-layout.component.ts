@@ -88,7 +88,6 @@ export class ServerLayoutComponent {
       next: (res) => {
         if (this.isChannelsResponse(res)) {
           this.channels = res.data;
-          console.log(this.channels)
         }
       },
       error: (err) => {
