@@ -1,6 +1,7 @@
 <div class="content">
     <header>
         <h1># Chat</h1>
+        <div class="typing-indicator" *ngIf="typingText">{{ typingText }}</div>
     </header>
     <div class="container">
         <main #messagesContainer>

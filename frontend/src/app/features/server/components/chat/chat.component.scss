@@ -6,6 +6,7 @@
 header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 var(--spacing-2xl);
     height: 3.75rem;
     border-bottom: 2px solid var(--bg-secondary);
@@ -123,4 +124,11 @@ textarea {
     padding: var(--spacing-lg) var(--spacing-2xl);
     resize: none;
     overflow: hidden;
+}
+
+.typing-indicator {
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-style: italic;
 }

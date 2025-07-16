@@ -64,6 +64,13 @@ io.on("connection", (socket) => {
         console.log("à quitté la room:", channelId);
     });
 
+    socket.on("typing", (data) => {
+        socket.broadcast.to(data.channelId).emit("typing", {
+            username: data.username,
+            channelId: data.channelId
+        });
+    });
+
     socket.on("disconnect", () => {
         console.log("Utilisateur déconnecté:", socket.id);
     });

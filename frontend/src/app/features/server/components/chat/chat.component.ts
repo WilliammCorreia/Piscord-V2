@@ -21,6 +21,8 @@ export class ChatComponent {
   protected messages: Message[] = [];
   private subscription?: Subscription;
   private messageSubscription?: Subscription;
+  typingUsers =  new Map<string, string>();
+  private lastTyping: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,9 +48,19 @@ export class ChatComponent {
     this.messageSubscription = this.socketService.listen<Message>("message").subscribe((message) => {
       this.messages.push(message);
     });
+
+    this.socketService.listen<any>("typing").subscribe((data) => {
+      if (data.channelId === this.channelId) {
+        this.typingUsers.set(data.username, data.username);
+        setTimeout(() => this.typingUsers.delete(data.username), 3000);
+      }
+    })
   }
 
   ngOnDestroy() {
+    if (this.channelId) {
+      this.socketService.emit("leave-channel", this.channelId);
+    }
     this.subscription?.unsubscribe();
     this.messageSubscription?.unsubscribe();
   }
@@ -105,6 +117,14 @@ export class ChatComponent {
     if (ev.key === "Enter" && !ev.shiftKey) {
       ev.preventDefault();
       this.sendMessage();
+    }
+
+    if (Date.now() - this.lastTyping > 2000) {
+      this.socketService.emit("typing", {
+        channelId: this.channelId,
+        username: this.authService.user?.username
+      });
+      this.lastTyping = Date.now();
     }
   }
 
@@ -173,13 +193,22 @@ export class ChatComponent {
     }
   }
 
-/**
- * Formate l'heure d'un message
- * @param date Date à formater (string ou Date)
- * @returns Heure au format HH:MM
- */
-formatTime(date: Date | string): string {
-  const messageDate = typeof date === 'string' ? new Date(date) : date;
-  return messageDate.toTimeString().slice(0, 5);
-}
+  /**
+   * Formate l'heure d'un message
+   * @param date Date à formater (string ou Date)
+   * @returns Heure au format HH:MM
+   */
+  formatTime(date: Date | string): string {
+    const messageDate = typeof date === 'string' ? new Date(date) : date;
+    return messageDate.toTimeString().slice(0, 5);
+  }
+
+  get typingText(): string {
+    const users = Array.from(this.typingUsers.values());
+    if (!users.length) return '';
+
+    if (users.length === 1) return `${users[0]} écrit...`;
+    if (users.length === 2) return `${users[0]} et ${users[1]} écrivent...`;
+    return `${users.length} personnes écrivent...`;
+  }
 }

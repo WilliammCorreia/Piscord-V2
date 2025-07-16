@@ -10,7 +10,11 @@ export class SocketService {
   private readonly url: string = "http://localhost:3000";
 
   constructor() { 
-    this.socket = io(this.url);
+    this.socket = io(this.url, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5
+    });
   }
 
   emit(eventName: string, data: any) {
