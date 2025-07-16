@@ -5,6 +5,7 @@ import { Message, MessageResponse, MessagesResponse } from '../../models/message
 import { AuthService } from '../../../auth/services/auth.service';
 import { ErrorResponse } from '../../models/server.model';
 import { Subscription } from 'rxjs';
+import { SocketService } from '../../services/socketio/socket.service';
 
 @Component({
   selector: 'app-chat',
@@ -19,11 +20,13 @@ export class ChatComponent {
   textMessage: string = "";
   protected messages: Message[] = [];
   private subscription?: Subscription;
+  private messageSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private socketService: SocketService
   ) { }
 
   /**
@@ -37,10 +40,17 @@ export class ChatComponent {
         await this.loadMessages();
       }
     });
+
+    this.socketService.emit("join-channel", this.channelId);
+
+    this.messageSubscription = this.socketService.listen<Message>("message").subscribe((message) => {
+      this.messages.push(message);
+    });
   }
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();
+    this.messageSubscription?.unsubscribe();
   }
 
   /**
@@ -120,6 +130,8 @@ export class ChatComponent {
       updatedAt: now,
       __v: 0
     }
+
+    this.socketService.emit("message", message);
 
     this.messages.push(message);
     this.textMessage = "";

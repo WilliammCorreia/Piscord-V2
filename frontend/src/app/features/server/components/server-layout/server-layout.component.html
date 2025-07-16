@@ -22,7 +22,7 @@
                 </div>
                 <article>
                     <ng-container *ngFor="let channel of channels">
-                        <a [routerLink]="['channel', channel._id]" routerLinkActive="active">
+                        <a [routerLink]="['channel', channel._id]" routerLinkActive="active" (click)="changeChannel(channel._id)">
                             # {{channel.name}}
                         </a>
                     </ng-container>

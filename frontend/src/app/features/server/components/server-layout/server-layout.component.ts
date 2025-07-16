@@ -4,6 +4,7 @@ import { ServerService } from '../../services/server/server.service';
 import { ChannelService } from '../../services/channel/channel.service';
 import { ErrorResponse, Member, ServersResponse } from '../../models/server.model';
 import { Channel, ChannelsResponse } from '../../models/channel.model';
+import { SocketService } from '../../services/socketio/socket.service';
 
 @Component({
   selector: 'app-server-layout',
@@ -15,6 +16,7 @@ export class ServerLayoutComponent {
   id: string | null = "";
   members: Member[] = [];
   channels: Channel[] = [];
+  currentChannelId: string = "";
 
   /**
    * Constructeur du composant ServerLayout
@@ -24,7 +26,8 @@ export class ServerLayoutComponent {
   constructor(
     private route: ActivatedRoute,
     private serverService: ServerService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private socketService: SocketService
   ) { }
 
   /**
@@ -95,5 +98,13 @@ export class ServerLayoutComponent {
         alert("Une erreur est survenue, veuillez ressayer plus tard.");
       }
     });
+  }
+
+  changeChannel(newChannelId: string) {
+    if (this.currentChannelId != "") {
+      this.socketService.emit("leave-channel", this.currentChannelId);
+    }
+    this.socketService.emit("join-channel", newChannelId);
+    this.currentChannelId = newChannelId;
   }
 }
