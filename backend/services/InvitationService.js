@@ -1,6 +1,7 @@
 const InvitationRepository = require("../repositories/InvitationRepository");
 const ServerRepository = require("../repositories/ServerRepository");
 const crypto = require("crypto");
+const UserRepository = require("../repositories/UserRepository");
 
 class InvitationService {
 
@@ -143,11 +144,13 @@ class InvitationService {
                 throw new Error("Vous êtes déjà membre de ce serveur");
             }
 
+            const updatedUser = await UserRepository.addServerId(userId, server._id);
             const updatedServer = await ServerRepository.addMember(server._id, userId);
 
             await InvitationRepository.incrementUsage(invitation._id);
 
             return {
+                user: updatedUser,
                 server: updatedServer,
                 invitation: invitation
             };
