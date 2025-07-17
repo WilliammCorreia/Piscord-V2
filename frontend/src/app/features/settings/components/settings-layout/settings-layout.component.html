@@ -1,0 +1,22 @@
+<div class="content">
+    <aside>
+        <header>
+            <a routerLink="/settings">
+                <h2>Piscord</h2>
+            </a>
+        </header>
+        <section>
+            <div class="title">
+                <h3>Catégories</h3>
+            </div>
+            <article>
+                <a routerLink="channel" routerLinkActive="active"># Salons</a>
+                <a routerLink="invitation" routerLinkActive="active"># Invitation</a>
+                <a [routerLink]="['/server', id]" routerLinkActive="active"># Revenir au serveur</a>
+            </article>
+        </section>
+    </aside>
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+</div>

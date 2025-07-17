@@ -31,6 +31,9 @@ section {
 
 .users {
     border-right: 2px solid var(--bg-secondary);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - header-height);
 }
 
 main {
@@ -56,6 +59,31 @@ article a, article li {
     color: var(--text-secondary);
     font-size: 0.8125rem;
 
+    &.active {
+        color: var(--text-primary);
+    }
+}
+
+.top {
+    flex: 1;
+}
+
+.settings {
+    margin-top: auto;
+    padding: var(--spacing-md);
+    border-top: 2px solid var(--bg-secondary);
+}
+
+.settings a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    
+    &:hover {
+        color: var(--text-primary);
+    }
+    
     &.active {
         color: var(--text-primary);
     }

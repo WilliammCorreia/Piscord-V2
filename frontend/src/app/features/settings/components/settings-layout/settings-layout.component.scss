@@ -1,0 +1,52 @@
+.content {
+    display: flex;
+    width: 100%;
+}
+
+aside {
+    width: 25%;
+    height: 100vh;
+    border-right: 2px solid var(--bg-secondary);
+}
+
+header {
+    height: 2.5rem;
+    padding: var(--spacing-sm);
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+a {
+    text-decoration: none;
+}
+
+section {
+    margin: var(--spacing-sm);
+}
+
+main {
+    width: 75%;
+}
+
+.title {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+article {
+    padding: 0 var(--spacing-md);
+}
+
+article a {
+    margin: var(--spacing-md);
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.05rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+
+    &.active {
+        color: var(--text-primary);
+    }
+}

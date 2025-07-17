@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path: "server",
     loadChildren: () => import("./features/server/server-module").then(m => m.ServerModule)
+  },
+  {
+    path: "settings",
+    loadChildren: () => import("./features/settings/settings-module").then(m => m.SettingsModule)
   }
 ];
 

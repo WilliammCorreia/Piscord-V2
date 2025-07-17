@@ -7,14 +7,19 @@
         </header>
         <section>
             <div class="users">
-                <div class="title">
-                    <h3>Utilisateurs</h3>
+                <div class="top">
+                    <div class="title">
+                        <h3>Utilisateurs</h3>
+                    </div>
+                    <article>
+                        <ul>
+                            <li *ngFor="let member of members">{{member.username}}</li>
+                        </ul>
+                    </article>
                 </div>
-                <article>
-                    <ul>
-                        <li *ngFor="let member of members">{{member.username}}</li>
-                    </ul>
-                </article>
+                <div class="settings">
+                    <a [routerLink]="['/settings', id]" routerLinkActive="active">Réglages</a>
+                </div>
             </div>
             <div class="channels">
                 <div class="title">
