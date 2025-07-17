@@ -1,0 +1,58 @@
+.content {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-2xl);
+    height: 3.75rem;
+    width: 100%;
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+h1 {
+    font-size: 1.065rem;
+}
+
+.container {
+    height: calc(100% - 3.75rem);
+}
+
+form {
+    padding: 3rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+input {
+    margin: var(--spacing-lg);
+    height: 3rem;
+    width: 20rem;
+}
+
+button {
+    margin: var(--spacing-lg);
+    height: 3rem;
+    width: 15rem;
+
+    &:disabled {
+        color: var(--text-secondary);
+        
+        &:hover {
+            background-color: var(--bg-input);
+        }
+    }
+}
+
+label {
+    letter-spacing: 0.05rem;
+}
+
+.submit {
+    display: flex;
+    flex-direction: row-reverse;
+}

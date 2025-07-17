@@ -1,7 +1,7 @@
 <div class="content">
     <aside>
         <header>
-            <a routerLink="/settings">
+            <a [routerLink]="['/settings', id]">
                 <h2>Piscord</h2>
             </a>
         </header>
@@ -11,7 +11,7 @@
             </div>
             <article>
                 <a routerLink="channel" routerLinkActive="active"># Salons</a>
-                <a routerLink="invitation" routerLinkActive="active"># Invitation</a>
+                <a routerLink="invitation" routerLinkActive="active"># Invitations</a>
                 <a [routerLink]="['/server', id]" routerLinkActive="active"># Revenir au serveur</a>
             </article>
         </section>

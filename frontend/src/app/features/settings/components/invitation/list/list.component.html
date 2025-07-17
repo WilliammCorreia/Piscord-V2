@@ -1,0 +1,12 @@
+<div class="content">
+    <header>
+        <h1># Lister</h1>
+    </header>
+    <div class="container">
+        <ul>
+            <li *ngFor="let invitation of invitations">
+                <a>{{ invitation.code }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

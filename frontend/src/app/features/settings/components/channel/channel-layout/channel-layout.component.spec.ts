@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InvitationComponent } from './invitation.component';
+import { ChannelLayoutComponent } from './channel-layout.component';
 
-describe('InvitationComponent', () => {
-  let component: InvitationComponent;
-  let fixture: ComponentFixture<InvitationComponent>;
+describe('ChannelLayoutComponent', () => {
+  let component: ChannelLayoutComponent;
+  let fixture: ComponentFixture<ChannelLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InvitationComponent]
+      declarations: [ChannelLayoutComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(InvitationComponent);
+    fixture = TestBed.createComponent(ChannelLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

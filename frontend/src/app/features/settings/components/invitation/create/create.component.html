@@ -1,0 +1,42 @@
+<div class="content">
+    <header>
+        <h1># Créer</h1>
+    </header>
+    <div class="container">
+        <form [formGroup]="formGroup" (submit)="onSubmit($event)">
+            <div class="inputs">
+                <div class="time">
+                    <label for="time">Temps avant expiration (jours): </label>
+                    <input 
+                        id="time" 
+                        name="time"
+                        type="number" 
+                        formControlName="time"
+                        placeholder="Nombre de jours"
+                        min="1">
+                    <div *ngIf="isFieldValid('time')" class="error">
+                        <div *ngIf="formGroup.get('time')?.hasError('required')">*Ce champ est requis</div>
+                        <div *ngIf="formGroup.get('time')?.hasError('min')">*Minimum 1 jour</div>
+                    </div>
+                </div>
+                <div class="maxUsage">
+                    <label for="maxUsage">Utilisation maximale: </label>
+                    <input 
+                        id="maxUsage" 
+                        name="maxUsage"
+                        type="number" 
+                        formControlName="maxUsage"
+                        placeholder="Nombre d'utilisations max"
+                        min="1">
+                    <div *ngIf="isFieldValid('maxUsage')" class="error">
+                        <div *ngIf="formGroup.get('maxUsage')?.hasError('required')">*Ce champ est requis</div>
+                        <div *ngIf="formGroup.get('maxUsage')?.hasError('min')">*Minimum 1 utilisation</div>
+                    </div>
+                </div>
+            </div>
+            <div class="submit">
+                <button type="submit" [disabled]="formGroup.invalid">Créer</button>
+            </div>
+        </form>
+    </div>
+</div>
