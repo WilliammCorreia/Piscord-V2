@@ -5,12 +5,14 @@ import { ServerRoutingModule } from './server-routing-module';
 import { ListComponent } from './components/list/list.component';
 import { CreateComponent } from './components/create/create.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { JoinComponent } from './components/join/join.component';
 
 
 @NgModule({
   declarations: [
     ListComponent,
-    CreateComponent
+    CreateComponent,
+    JoinComponent
   ],
   imports: [
     CommonModule,

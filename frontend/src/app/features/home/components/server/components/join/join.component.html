@@ -1,0 +1,26 @@
+<div class="content">
+    <header>
+        <h1># Rejoindre</h1>
+    </header>
+    <div class="container">
+        <form [formGroup]="formGroup" (submit)="onSubmit($event)">
+            <div class="inputs">
+                <div class="code">
+                    <label for="code">Code : </label>
+                    <input 
+                        id="code" 
+                        name="code"
+                        type="text" 
+                        formControlName="code">
+                    <div *ngIf="isFieldValid('code')" class="error">
+                        <div *ngIf="formGroup.get('code')?.hasError('required')">*Ce champ est requis</div>
+                        <div *ngIf="formGroup.get('code')?.hasError('minlength')">*Le code doit contenir au moins 6 caractères</div>
+                    </div>
+                </div>
+            </div>
+            <div class="submit">
+                <button type="submit" [disabled]="formGroup.invalid">Rejoindre</button>
+            </div>
+        </form>
+    </div>
+</div>

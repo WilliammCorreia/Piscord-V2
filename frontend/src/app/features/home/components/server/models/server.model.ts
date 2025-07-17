@@ -40,6 +40,16 @@ export interface CreateServerResponse {
     message: string;
 }
 
+export interface JoinServerRequest {
+    code: string;
+}
+
+export interface JoinServerResponse {
+    success: boolean;
+    data: ServerUser;
+    message: string;
+}
+
 export interface ErrorResponse {
     success: boolean;
     error: string;
