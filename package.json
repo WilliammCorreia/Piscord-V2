@@ -2,7 +2,7 @@
   "name": "piscord",
   "scripts": {
     "deploy": "deploy.bat",
-    "deploy:unix": "./deploy.sh",
+    "deploy:unix": "bash deploy.sh",
     "logs": "docker-compose logs -f",
     "status": "docker-compose ps", 
     "stop": "docker-compose down",

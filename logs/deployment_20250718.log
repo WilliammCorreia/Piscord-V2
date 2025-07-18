@@ -1,0 +1,118 @@
+[18/07/2025 22:33:53,59] Début déploiement 
+ Container piscord-mongo-express-1  Stopping
+ Container piscord-mongo-express-1  Stopped
+ Container piscord-mongo-express-1  Removing
+ Container piscord-mongo-express-1  Removed
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+[18/07/2025 22:34:40,64] Déploiement réussi 
+[Fri, Jul 18, 2025 10:39:06 PM] Début déploiement
+ Container piscord-frontend-1  Stopping
+ Container piscord-frontend-1  Stopped
+ Container piscord-frontend-1  Removing
+ Container piscord-frontend-1  Removed
+ Container piscord-backend-1  Stopping
+ Container piscord-backend-1  Stopped
+ Container piscord-backend-1  Removing
+ Container piscord-backend-1  Removed
+ Container piscord-mongodb-1  Stopping
+ Container piscord-mongodb-1  Stopped
+ Container piscord-mongodb-1  Removing
+ Container piscord-mongodb-1  Removed
+ Network piscord_default  Removing
+ Network piscord_default  Removed
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+[Fri, Jul 18, 2025 10:40:12 PM] ECHEC déploiement - Connectivity issue
+[Fri, Jul 18, 2025 10:44:19 PM] Début déploiement
+ Container piscord-frontend-1  Stopping
+ Container piscord-frontend-1  Stopped
+ Container piscord-frontend-1  Removing
+ Container piscord-frontend-1  Removed
+ Container piscord-backend-1  Stopping
+ Container piscord-backend-1  Stopped
+ Container piscord-backend-1  Removing
+ Container piscord-backend-1  Removed
+ Container piscord-mongodb-1  Stopping
+ Container piscord-mongodb-1  Stopped
+ Container piscord-mongodb-1  Removing
+ Container piscord-mongodb-1  Removed
+ Network piscord_default  Removing
+ Network piscord_default  Removed
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+[Fri, Jul 18, 2025 10:45:31 PM] ECHEC déploiement - Connectivity issue
+[Fri, Jul 18, 2025 10:49:28 PM] Début déploiement
+ Container piscord-frontend-1  Stopping
+ Container piscord-frontend-1  Stopped
+ Container piscord-frontend-1  Removing
+ Container piscord-frontend-1  Removed
+ Container piscord-backend-1  Stopping
+ Container piscord-backend-1  Stopped
+ Container piscord-backend-1  Removing
+ Container piscord-backend-1  Removed
+ Container piscord-mongodb-1  Stopping
+ Container piscord-mongodb-1  Stopped
+ Container piscord-mongodb-1  Removing
+ Container piscord-mongodb-1  Removed
+ Network piscord_default  Removing
+ Network piscord_default  Removed
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+[Fri, Jul 18, 2025 10:50:55 PM] Déploiement réussi
