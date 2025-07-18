@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mongodb:
     image: mongo:8.0
@@ -5,38 +7,33 @@ services:
       - "27017:27017"
     volumes:
       - mongodb-data:/data/db
-  
-  mongo-express:
-    image: mongo-express
-    ports:
-     - "8081:8081"
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb
-    depends_on:
-      - mongodb
+    restart: unless-stopped
 
   backend:
     build:
       context: ./backend
+      dockerfile: Dockerfile
     ports: 
       - "3000:3000"
-    env_file:
-      - ./backend/.env
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/piscord
+      - JWT_SECRET=votre-secret-key-super-secure
+      - FRONTEND_ADDRESS=http://localhost
     depends_on:
       - mongodb
+    restart: unless-stopped
   
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     ports: 
-      - "4200:4200"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.angular
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   mongodb-data:

@@ -1,0 +1,12 @@
+{
+  "name": "piscord",
+  "scripts": {
+    "deploy": "deploy.bat",
+    "deploy:unix": "./deploy.sh",
+    "logs": "docker-compose logs -f",
+    "status": "docker-compose ps", 
+    "stop": "docker-compose down",
+    "restart": "docker-compose restart",
+    "clean": "docker-compose down -v --rmi all"
+  }
+}
