@@ -6,7 +6,6 @@
     "logs": "docker-compose logs -f",
     "status": "docker-compose ps", 
     "stop": "docker-compose down",
-    "restart": "docker-compose restart",
-    "clean": "docker-compose down -v --rmi all"
+    "restart": "docker-compose restart"
   }
 }

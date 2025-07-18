@@ -6,14 +6,16 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN npx ng build --project=frontend --configuration=production
+
+# Build avec le chemin de sortie explicite
+RUN npm run build:prod
 
 FROM nginx:alpine
 
-RUN rm -rf /usr/share/nginx/html/*
+# Copier les fichiers buildés depuis le dossier browser (Angular 20+)
+COPY --from=builder /app/dist/browser/ /usr/share/nginx/html/
 
-COPY --from=builder /app/dist/ /usr/share/nginx/html/
-
+# Copier la configuration nginx
 COPY nginx-local.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
