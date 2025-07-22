@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateInvitationRequest, CreateInvitationResponse, InvitationsResponse, ErrorResponse } from '../../models/invitation.model';
+import { environment } from '../../../../../environments/environments.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvitationService {
-  private readonly url: string = "http://localhost:3000/api/invitation";
+  private readonly apiUrl = `${environment.apiUrl}/invitation`;
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +18,7 @@ export class InvitationService {
    * @returns Observable avec la liste des invitations
    */
   getInvitationsByServerId(serverId: string): Observable<InvitationsResponse | ErrorResponse> {
-    return this.http.get<InvitationsResponse | ErrorResponse>(`${this.url}/server/${serverId}`, {
+    return this.http.get<InvitationsResponse | ErrorResponse>(`${this.apiUrl}/server/${serverId}`, {
       withCredentials: true
     });
   }
@@ -28,7 +29,7 @@ export class InvitationService {
    * @returns Observable avec l'invitation créée
    */
   createInvitation(invitationData: CreateInvitationRequest): Observable<CreateInvitationResponse | ErrorResponse> {
-    return this.http.post<CreateInvitationResponse | ErrorResponse>(`${this.url}/`, invitationData, {
+    return this.http.post<CreateInvitationResponse | ErrorResponse>(`${this.apiUrl}/`, invitationData, {
       withCredentials: true
     });
   }

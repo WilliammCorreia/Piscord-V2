@@ -24,13 +24,13 @@ class AuthController {
 
             res.cookie("accessToken", result.tokens.accessToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'strict'
             });
 
             res.cookie("refreshToken", result.tokens.refreshToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'strict'
             });
 
@@ -65,13 +65,13 @@ class AuthController {
 
             res.cookie("accessToken", result.tokens.accessToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'strict'
             });
 
             res.cookie("refreshToken", result.tokens.refreshToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'strict'
             });
 

@@ -1,0 +1,44 @@
+[Tue, Jul 22, 2025  7:28:24 PM] Début déploiement
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-nginx-1  Creating
+ Container piscord-nginx-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+ Container piscord-nginx-1  Starting
+ Container piscord-nginx-1  Started
+[Tue, Jul 22, 2025  7:29:34 PM] Déploiement réussi
+[Tue, Jul 22, 2025  8:50:15 PM] Début déploiement
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-nginx-1  Creating
+ Container piscord-nginx-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+ Container piscord-nginx-1  Starting
+ Container piscord-nginx-1  Started
+[Tue, Jul 22, 2025  8:51:19 PM] Déploiement réussi

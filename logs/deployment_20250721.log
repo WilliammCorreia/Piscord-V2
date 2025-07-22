@@ -1,0 +1,40 @@
+[Mon, Jul 21, 2025  6:31:41 PM] Début déploiement
+error during connect: Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.48/containers/json?all=1&filters=%7B%22label%22%3A%7B%22com.docker.compose.config-hash%22%3Atrue%2C%22com.docker.compose.project%3Dpiscord%22%3Atrue%7D%7D": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+error during connect: Head "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/_ping": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+[Mon, Jul 21, 2025  6:31:42 PM] ECHEC déploiement - Build failed
+[Mon, Jul 21, 2025  6:35:18 PM] Début déploiement
+ Container piscord-frontend-1  Stopping
+ Container piscord-frontend-1  Stopped
+ Container piscord-frontend-1  Removing
+ Container piscord-frontend-1  Removed
+ Container piscord-backend-1  Stopping
+ Container piscord-backend-1  Stopped
+ Container piscord-backend-1  Removing
+ Container piscord-backend-1  Removed
+ Container piscord-mongodb-1  Stopping
+ Container piscord-mongodb-1  Stopped
+ Container piscord-mongodb-1  Removing
+ Container piscord-mongodb-1  Removed
+ Container piscord-mongo-express-1  Stopping
+ Container piscord-mongo-express-1  Stopped
+ Container piscord-mongo-express-1  Removing
+ Container piscord-mongo-express-1  Removed
+ Network piscord_default  Removing
+ Network piscord_default  Removed
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+[Mon, Jul 21, 2025  6:36:25 PM] Déploiement réussi
