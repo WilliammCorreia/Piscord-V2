@@ -32,13 +32,13 @@ class AuthService {
             const accessToken = jwt.sign(
                 payload, 
                 process.env.JWT_SECRET, 
-                { expiresIn: '15min' }
+                { expiresIn: process.env.JWT_ACCESS_EXPIRY }
             );
 
             const refreshToken = jwt.sign(
                 { user: user._id }, 
                 process.env.JWT_SECRET, 
-                { expiresIn: '7d' }
+                { expiresIn: process.env.JWT_REFRESH_EXPIRY }
             );
 
             return { accessToken, refreshToken };
@@ -64,7 +64,7 @@ class AuthService {
             const user = await UserRepository.findByEmail(email);
             if (user) throw new Error("Email déjà utilisé.");
 
-            const hashPassword = await bcrypt.hash(password, 12);
+            const hashPassword = await bcrypt.hash(password, process.env.BCRYPT_ROUNDS);
 
             let newUser = await UserRepository.create({ email, hashPassword, username });
             newUser = {

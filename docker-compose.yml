@@ -27,10 +27,10 @@ services:
       dockerfile: Dockerfile
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - PORT=${PORT}
       - MONGODB_URI=mongodb://admin:${MONGO_ROOT_PASSWORD}@mongodb:27017/piscord?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
-      - FRONTEND_ADDRESS=https://localhost
+      - FRONTEND_ADDRESS=${FRONTEND_ADDRESS}
     depends_on:
       - mongodb
     restart: unless-stopped
