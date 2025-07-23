@@ -104,3 +104,25 @@ failed to solve: Internal: error committing 3r2mztrl5thim7ga7wi03ri73: write /va
  Container piscord-nginx-1  Starting
  Container piscord-nginx-1  Started
 [Wed, Jul 23, 2025 10:37:24 AM] Déploiement réussi
+[Wed, Jul 23, 2025 11:54:04 AM] Début déploiement
+ backend  Built
+ frontend  Built
+ Network piscord_default  Creating
+ Network piscord_default  Created
+ Container piscord-mongodb-1  Creating
+ Container piscord-mongodb-1  Created
+ Container piscord-backend-1  Creating
+ Container piscord-backend-1  Created
+ Container piscord-frontend-1  Creating
+ Container piscord-frontend-1  Created
+ Container piscord-nginx-1  Creating
+ Container piscord-nginx-1  Created
+ Container piscord-mongodb-1  Starting
+ Container piscord-mongodb-1  Started
+ Container piscord-backend-1  Starting
+ Container piscord-backend-1  Started
+ Container piscord-frontend-1  Starting
+ Container piscord-frontend-1  Started
+ Container piscord-nginx-1  Starting
+ Container piscord-nginx-1  Started
+[Wed, Jul 23, 2025 11:55:02 AM] Déploiement réussi

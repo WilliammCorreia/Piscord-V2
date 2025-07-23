@@ -64,7 +64,7 @@ class AuthService {
             const user = await UserRepository.findByEmail(email);
             if (user) throw new Error("Email déjà utilisé.");
 
-            const hashPassword = await bcrypt.hash(password, process.env.BCRYPT_ROUNDS);
+            const hashPassword = await bcrypt.hash(password, 12);
 
             let newUser = await UserRepository.create({ email, hashPassword, username });
             newUser = {
