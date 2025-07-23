@@ -73,7 +73,7 @@ echo ========================================
 echo     DEPLOIEMENT REUSSI !
 echo ========================================
 echo.
-echo Application accessible sur: https://localhost:443
+echo Application accessible sur: https://localhost
 echo.
 echo Commandes utiles:
 echo   docker-compose logs -f    (voir les logs)

@@ -32,13 +32,13 @@ class AuthService {
             const accessToken = jwt.sign(
                 payload, 
                 process.env.JWT_SECRET, 
-                { expiresIn: process.env.JWT_ACCESS_EXPIRY }
+                { expiresIn: '15min' }
             );
 
             const refreshToken = jwt.sign(
                 { user: user._id }, 
                 process.env.JWT_SECRET, 
-                { expiresIn: process.env.JWT_REFRESH_EXPIRY }
+                { expiresIn: '7d' }
             );
 
             return { accessToken, refreshToken };
@@ -143,7 +143,7 @@ class AuthService {
             const accessToken = jwt.sign(
                 payload, 
                 process.env.JWT_SECRET,
-                { expiresIn: '15min'}
+                { expiresIn: '15min' }
             );
 
             return accessToken;

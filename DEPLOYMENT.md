@@ -1,6 +1,7 @@
 # Guide de déploiement - Piscord
 
 ## Architecture
+- Reverse Proxy : Nginx (port 443)
 - Frontend : Angular (port 80)
 - Backend : Node.js/Express (port 3000) 
 - Base de données : MongoDB (port 27017)
@@ -22,6 +23,8 @@ Créer un fichier `.env` à la racine du projet :
 ```
 MONGO_ROOT_PASSWORD=votre-mot-de-passe
 JWT_SECRET=votre-secret-key
+FRONTEND_ADDRESS=https://localhost
+PORT=3000
 ```
 
 ### 2. Déploiement
@@ -55,14 +58,12 @@ chmod +x deploy.sh
 
 ## Vérification
 
-L'application sera accessible sur :
-- **Frontend** : http://localhost
-- **Backend API** : http://localhost:3000
+L'application sera accessible sur : https://localhost
 
 Test rapide :
 ```bash
 # Tester le backend
-curl http://localhost:3000/
+curl https://localhost:3000/
 
 # Voir les logs
 docker-compose logs
