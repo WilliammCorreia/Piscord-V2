@@ -12,15 +12,6 @@ services:
       - frontend
     restart: unless-stopped
 
-  mongodb:
-    image: mongo:8.0
-    volumes:
-      - mongodb-data:/data/db
-    restart: unless-stopped
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-
   backend:
     build:
       context: ./backend
@@ -28,11 +19,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=${PORT}
-      - MONGODB_URI=mongodb://admin:${MONGO_ROOT_PASSWORD}@mongodb:27017/piscord?authSource=admin
+      - MONGODB_URI=${MONGODB_URI_PROD}
       - JWT_SECRET=${JWT_SECRET}
       - FRONTEND_ADDRESS=${FRONTEND_ADDRESS}
-    depends_on:
-      - mongodb
     restart: unless-stopped
   
   frontend:
@@ -42,6 +31,3 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
-volumes:
-  mongodb-data:
