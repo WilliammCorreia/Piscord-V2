@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MessageResponse, ErrorResponse, MessagesResponse } from '../../models/message.model';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  private readonly url = "http://localhost:3000/api/message";
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/message`;
 
   /**
    * Constructeur du service
@@ -21,7 +22,7 @@ export class MessageService {
    * @returns Observable de la réponse de création de message ou d'erreur
    */
   postMessage(body: Object): Observable<MessageResponse | ErrorResponse> {
-    return this.http.post<MessageResponse | ErrorResponse>(`${this.url}/`, body, {
+    return this.http.post<MessageResponse | ErrorResponse>(`${this.apiUrl}/`, body, {
       withCredentials: true
     });
   }
@@ -32,7 +33,7 @@ export class MessageService {
    * @returns Observable de la réponse contenant la liste des messages ou d'erreur
    */
   getMessagesByChannel(channelId: string, page: number = 0): Observable<MessagesResponse | ErrorResponse> {
-    return this.http.get<MessagesResponse | ErrorResponse>(`${this.url}/reference/${channelId}?page=${page}`, {
+    return this.http.get<MessagesResponse | ErrorResponse>(`${this.apiUrl}/reference/${channelId}?page=${page}`, {
       withCredentials: true
     });
   }

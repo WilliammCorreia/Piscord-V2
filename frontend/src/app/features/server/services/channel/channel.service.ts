@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ChannelsResponse, ErrorResponse } from '../../models/channel.model';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelService {
-  private readonly url = "http://localhost:3000/api/channel";
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/channel`;
 
   /**
    * Constructeur du service
@@ -16,7 +17,7 @@ export class ChannelService {
   constructor(private http: HttpClient) { }
 
   getChannelByServer(serverId: string): Observable<ChannelsResponse | ErrorResponse> {
-    return this.http.get<ChannelsResponse | ErrorResponse>(`${this.url}/server/${serverId}`, {
+    return this.http.get<ChannelsResponse | ErrorResponse>(`${this.apiUrl}/server/${serverId}`, {
       withCredentials: true
     });
   }

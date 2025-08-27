@@ -9,6 +9,7 @@ import {
   ErrorResponse, 
   UserData
 } from '../models/auth.model';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Service d'authentification
@@ -18,7 +19,7 @@ import {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:3000/api/auth';
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/auth`;
   private userData: UserData | null = null;
 
   /**
