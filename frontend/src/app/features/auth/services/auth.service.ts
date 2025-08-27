@@ -9,7 +9,7 @@ import {
   ErrorResponse, 
   UserData
 } from '../models/auth.model';
-import { environment } from '../../../../environments/environments.prod';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Service d'authentification
@@ -19,7 +19,7 @@ import { environment } from '../../../../environments/environments.prod';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/auth`;
   private userData: UserData | null = null;
 
   /**

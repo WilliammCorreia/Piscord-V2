@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { environment } from '../../../../../environments/environments.prod';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
   private socket: Socket;
-  private readonly url = environment.socketUrl;
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}`;
 
   constructor() { 
-    this.socket = io(this.url, {
+    this.socket = io(this.apiUrl, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionAttempts: 5

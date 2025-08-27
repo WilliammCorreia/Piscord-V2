@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateInvitationRequest, CreateInvitationResponse, InvitationsResponse, ErrorResponse } from '../../models/invitation.model';
-import { environment } from '../../../../../environments/environments.prod';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvitationService {
-  private readonly apiUrl = `${environment.apiUrl}/invitation`;
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/invitation`;
 
   constructor(private http: HttpClient) { }
 

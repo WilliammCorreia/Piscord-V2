@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ChannelsResponse, ErrorResponse } from '../../models/channel.model';
-import { environment } from '../../../../../environments/environments.prod';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelService {
-  private readonly apiUrl = `${environment.apiUrl}/channel`;
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/channel`;
 
   /**
    * Constructeur du service

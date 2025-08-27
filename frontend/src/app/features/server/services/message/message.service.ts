@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MessageResponse, ErrorResponse, MessagesResponse } from '../../models/message.model';
-import { environment } from '../../../../../environments/environments.prod';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  private readonly apiUrl = `${environment.apiUrl}/message`;
+  private readonly apiUrl = `${environment.BACKEND_ADDRESS}/api/message`;
 
   /**
    * Constructeur du service
