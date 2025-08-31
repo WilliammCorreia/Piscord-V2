@@ -14,19 +14,19 @@ export class ServerService {
   constructor(private http: HttpClient) { }
 
   getServerByUser(): Observable<UserServersResponse | ErrorResponse> {
-    return this.http.get<UserServersResponse | ErrorResponse>(`${this.apiUrlServer}/user`, {
+    return this.http.get<UserServersResponse | ErrorResponse>(`${this.url}/user`, {
       withCredentials: true,
     });
   }
 
   createServer(name: CreateServerRequest): Observable<CreateServerResponse | ErrorResponse> {
-    return this.http.post<CreateServerResponse | ErrorResponse>(`${this.apiUrlServer}/`, name, {
+    return this.http.post<CreateServerResponse | ErrorResponse>(`${this.url}/`, name, {
       withCredentials: true
     });
   }
 
   joinServer(joinData: JoinServerRequest): Observable<JoinServerResponse | ErrorResponse> {
-    return this.http.post<JoinServerResponse | ErrorResponse>(`${this.apiUrlInvitation}/join`, joinData, {
+    return this.http.post<JoinServerResponse | ErrorResponse>(`${this.invitationUrl}/join`, joinData, {
       withCredentials: true
     });
   }
