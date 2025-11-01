@@ -14,8 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     origin: [
-        process.env.FRONTEND_ADDRESS,
-        process.env.INSOMNIA_ADDRESS
+        process.env.REVERSE_PROXY_ADDRESS
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
