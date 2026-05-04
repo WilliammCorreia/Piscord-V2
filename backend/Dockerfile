@@ -1,12 +1,26 @@
-FROM node:22-alpine
-
+FROM node:24.15.0-alpine3.22 AS base
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
 
-RUN npm install -g nodemon
+# Dev
+FROM base AS dev
+
+RUN npm ci
 
 EXPOSE 3000
 
-CMD ["nodemon", "--legacy-watch", "server.js"]
+CMD ["npm", "run", "dev"]
+
+# Prod
+FROM base AS prod
+
+RUN npm ci --omit=dev
+
+COPY . .
+
+EXPOSE 3000
+
+USER node
+
+CMD ["node", "server.js"]

@@ -1,11 +1,4 @@
 services:
-  mongodb:
-    image: mongo:8.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb-data:/data/db
-  
   reverseproxy:
     image: nginx:latest
     ports:
@@ -19,25 +12,31 @@ services:
   backend:
     build:
       context: ./backend
+      target: prod
     ports: 
       - "3000:3000"
     env_file:
       - ./backend/.env
     volumes:
       - ./backend:/app
-      - /app/node_modules
     depends_on:
       - mongodb
   
   frontend:
     build:
       context: ./frontend
+      # target: prod
     ports:
       - "4200:4200"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
-      - /app/.angular
+
+  mongodb:
+    image: mongo:8.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
 
 volumes:
   mongodb-data:

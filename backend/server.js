@@ -30,7 +30,7 @@ const server = app.listen(port, () => {
 });
 
 
-app.get("/", (req, res) => {
+app.get("/api/ping", (req, res) => {
     res.send("Hello, World!");
 });
 

@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+  
+  frontend:
+    build:
+      context: ./frontend
+      # target: dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.angular
+
+  mongo-express:
+    image: mongo-express
+    ports:
+     - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    depends_on:
+      - mongodb
