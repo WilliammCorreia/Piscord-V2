@@ -1,6 +1,6 @@
 services:
   reverseproxy:
-    image: nginx:latest
+    image: nginx:1.30.0-alpine3.23-slim
     ports:
       - "80:80"
       - "443:443"
@@ -8,13 +8,20 @@ services:
       - ./config.conf:/etc/nginx/conf.d/core.conf
     depends_on:
       - backend
+      - frontend
+    networks:
+      - piscord-frontend
+      - piscord-backend
 
   backend:
     build:
       context: ./backend
       target: prod
-    ports: 
-      - "3000:3000"
+    networks:
+      - piscord-backend
+      - piscord-database
+    expose:
+      - "3000"
     env_file:
       - ./backend/.env
     depends_on:
@@ -23,18 +30,30 @@ services:
   frontend:
     build:
       context: ./frontend
-      # target: prod
-    ports:
-      - "4200:4200"
+      target: prod
+    expose:
+      - "4200"
     volumes:
       - ./frontend:/app
+    networks:
+      - piscord-frontend
 
   mongodb:
     image: mongo:8.0
-    ports:
-      - "27017:27017"
+    expose:
+      - "27017"
     volumes:
       - mongodb-data:/data/db
+    networks:
+      - piscord-database
+
+networks:
+  piscord-frontend:
+    driver: bridge
+  piscord-backend:
+    driver: bridge
+  piscord-database:
+    driver: bridge
 
 volumes:
   mongodb-data:
