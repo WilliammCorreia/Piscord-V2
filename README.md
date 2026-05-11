@@ -25,61 +25,35 @@ Application de chat en temps réel inspirée de Discord, développée avec Node.
 
 ## 📋 Prérequis
 
-- Node.js
-- MongoDB
-- Angular CLI
+### Installation Rapide avec Docker (Recommandé)
+- Docker
+- Docker Compose
 
 ## ⚡ Installation Rapide
 
-### Backend
-```bash
-cd backend
-npm install
-```
+### 🐳 Avec Docker (Recommandé)
 
-Créer un fichier `.env` :
-```
+1. **Créer le fichier `.env` du backend** :
+```bash
+cat > backend/.env << 'EOF'
 PORT=3000
 MONGODB_URI=mongodb://mongodb:27017/piscord
 JWT_SECRET=votre-secret-key
-FRONTEND_ADDRESS=http://localhost:4200
-INSOMNIA_ADDRESS=http://localhost:8005
+FRONTEND_ADDRESS=http://localhost
+INSOMNIA_ADDRESS=http://localhost
+EOF
 ```
 
-Lancer le serveur :
+2. **Démarrer l'application** :
 ```bash
-node server.js
+docker compose -f docker-compose.yml up --build -d
 ```
 
-### Frontend
+L'application sera accessible sur : http://localhost
+
+3. **Arrêter l'application** :
 ```bash
-cd frontend
-npm install
-ng serve
-```
-
-L'application sera accessible sur `http://localhost:4200`
-
-## 📁 Structure
-
-```
-piscord/
-├── backend/
-│    ├── routes/           # Routes
-│    ├── controllers/      # Contrôleurs
-│    ├── services/         # Services métier
-│    ├── repositories/     # Accès aux données
-│    ├── models/           # Schémas MongoDB
-│    ├── validators/       # Validation des données
-│    ├── middleware/       # Middlewares transversaux
-│    └── server.js         # Point d'entrée
-│
-└── frontend/
-    └── src/
-        └── app/
-            ├── components/     # Components Angular
-            ├── services/       # Services (API, Socket)
-            └── app.module.ts   # Module principal
+docker compose down
 ```
 
 ---
