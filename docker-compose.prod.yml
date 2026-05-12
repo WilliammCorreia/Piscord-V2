@@ -4,7 +4,7 @@ services:
       - "443:443"
     volumes:
       - ./config.conf.template:/etc/nginx/templates/config.conf.template
-      - etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
   backend:
     env_file:
