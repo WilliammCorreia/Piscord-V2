@@ -1,0 +1,9 @@
+services:
+  reverseproxy:
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+    ports:
+      - "443:443"
+    volumes:
+      - ./config.conf.template:/etc/nginx/templates/config.conf.template
+      - etc/letsencrypt:/etc/letsencrypt:ro

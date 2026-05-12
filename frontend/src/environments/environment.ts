@@ -1,3 +1,3 @@
 export const environment = {
-    BACKEND_ADDRESS: "http://localhost"
+    BACKEND_ADDRESS: "https://piscord.me"
 };
