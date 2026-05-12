@@ -7,6 +7,8 @@ services:
     build:
       context: ./backend
       target: dev
+    env_file:
+      - ./backend/.env
     volumes:
       - ./backend:/app
       - /app/node_modules

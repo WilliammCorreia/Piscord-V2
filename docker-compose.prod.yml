@@ -7,3 +7,7 @@ services:
     volumes:
       - ./config.conf.template:/etc/nginx/templates/config.conf.template
       - etc/letsencrypt:/etc/letsencrypt:ro
+
+  backend:
+    env_file:
+      - ./backend/.env.production

@@ -19,8 +19,6 @@ services:
       - piscord-database
     expose:
       - "3000"
-    env_file:
-      - ./backend/.env
     depends_on:
       - mongodb
   
