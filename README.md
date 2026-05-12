@@ -46,7 +46,7 @@ EOF
 
 2. **Démarrer l'application** :
 ```bash
-docker compose -f docker-compose.yml up --build -d
+docker compose up --build -d
 ```
 
 L'application sera accessible sur : http://localhost
