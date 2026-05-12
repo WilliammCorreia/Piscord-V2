@@ -1,11 +1,13 @@
 services:
   reverseproxy:
     image: nginx:1.30.0-alpine3.23-slim
+    environment:
+      - SERVER_NAME=${SERVER_NAME:-localhost}
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./config.conf:/etc/nginx/conf.d/core.conf
+      - ./config.conf.template:/etc/nginx/templates/config.conf.template
     depends_on:
       - backend
       - frontend
