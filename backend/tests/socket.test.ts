@@ -1,57 +1,13 @@
-import { type Server as HttpServer, createServer as createHttpServer } from 'node:http';
-import type { AddressInfo } from 'node:net';
-import { type Socket, io as connect } from 'socket.io-client';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { initSocket } from '../src/socket/index.ts';
-import { type TestUser, app, createChannel, createServer, createUser, joinServer } from './helpers.ts';
+import type { Socket } from 'socket.io-client';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { type TestUser, createChannel, createServer, createUser, joinServer } from './helpers.ts';
+import { expectNoEvent, nextEvent, useSocketServer } from './socketHelpers.ts';
 
-let httpServer: HttpServer;
-let url: string;
-const sockets: Socket[] = [];
-
-beforeAll(async () => {
-    httpServer = createHttpServer(app);
-    initSocket(httpServer);
-    await new Promise<void>((resolve) => httpServer.listen(0, resolve));
-    url = `http://localhost:${(httpServer.address() as AddressInfo).port}`;
-});
-
-afterEach(() => {
-    for (const socket of sockets.splice(0)) socket.disconnect();
-});
-
-afterAll(async () => {
-    await new Promise((resolve) => httpServer.close(resolve));
-});
-
-/** Ouvre un socket avec les cookies donnés ; rejette si le serveur refuse la connexion */
-function openSocket(cookie?: string): Promise<Socket> {
-    return new Promise((resolve, reject) => {
-        const socket = connect(url, {
-            transports: ['websocket'],
-            reconnection: false,
-            extraHeaders: cookie ? { cookie } : undefined,
-        });
-        sockets.push(socket);
-        socket.once('connect', () => resolve(socket));
-        socket.once('connect_error', reject);
-    });
-}
+const server = useSocketServer();
+const openSocket = (cookie?: string) => server.open(cookie);
 
 function joinChannel(socket: Socket, channelId: string): Promise<{ ok: boolean; code?: string }> {
     return socket.emitWithAck('join-channel', channelId);
-}
-
-function nextEvent<T>(socket: Socket, event: string): Promise<T> {
-    return new Promise((resolve) => socket.once(event, resolve));
-}
-
-/** Vérifie qu'aucun événement n'arrive pendant un court délai */
-async function expectNoEvent(socket: Socket, event: string): Promise<void> {
-    let received = false;
-    socket.once(event, () => { received = true; });
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(received).toBe(false);
 }
 
 describe('Socket.io', () => {

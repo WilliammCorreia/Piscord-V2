@@ -49,6 +49,14 @@ class ServerRepository {
     }
 
     /**
+     * Récupère les IDs des serveurs dont un utilisateur est membre
+     */
+    async findIdsByMember(userId: string): Promise<string[]> {
+        const servers = await Server.find({ memberIds: userId }).select('_id').lean<{ _id: Types.ObjectId }[]>();
+        return servers.map((server) => server._id.toString());
+    }
+
+    /**
      * Ajoute un membre à un serveur ($addToSet : sans effet s'il l'est déjà)
      */
     async addMember(serverId: string | Types.ObjectId, userId: string): Promise<ServerWithMembers | null> {

@@ -25,3 +25,4 @@ function createLimiter(limit: number) {
 
 export const authLimiter = createLimiter(20);
 export const invitationLimiter = createLimiter(30);
+export const friendRequestLimiter = createLimiter(30);

@@ -9,10 +9,10 @@ class ServerController {
      * Crée un nouveau serveur
      */
     create = async (req: Request, res: Response): Promise<void> => {
-        const { userId } = getAuthUser(req);
+        const user = getAuthUser(req);
         const { name } = matchedData<{ name: string }>(req);
 
-        const server = await ServerService.create(name, userId);
+        const server = await ServerService.create(name, user);
 
         res.status(201).json({
             success: true,

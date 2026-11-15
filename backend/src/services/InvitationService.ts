@@ -2,6 +2,8 @@ import { randomBytes } from 'node:crypto';
 import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from '../errors/AppError.ts';
 import InvitationRepository, { type InvitationLean } from '../repositories/InvitationRepository.ts';
 import ServerRepository, { type ServerWithMembers } from '../repositories/ServerRepository.ts';
+import { addUserToServer } from '../socket/index.ts';
+import type { AuthUser } from '../types/auth.ts';
 import AccessService from './AccessService.ts';
 
 const MAX_CODE_ATTEMPTS = 10;
@@ -84,7 +86,8 @@ class InvitationService {
      * Rejoint un serveur via une invitation
      * @returns Le serveur rejoint, avec ses membres
      */
-    async joinByInvitation(code: string, userId: string): Promise<{ server: ServerWithMembers }> {
+    async joinByInvitation(code: string, user: AuthUser): Promise<{ server: ServerWithMembers }> {
+        const { userId } = user;
         const invitation = await InvitationRepository.findByCode(code);
         if (!invitation) {
             throw new NotFoundError('Invitation introuvable', 'INVITATION_NOT_FOUND');
@@ -129,6 +132,8 @@ class InvitationService {
             await InvitationRepository.releaseUsage(invitation._id);
             throw new NotFoundError('Serveur introuvable', 'SERVER_NOT_FOUND');
         }
+
+        addUserToServer(userId, user.username, server._id.toString());
 
         return { server: updatedServer };
     }

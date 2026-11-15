@@ -1,12 +1,12 @@
 import type { Types } from 'mongoose';
-import { Channel, type IChannel } from '../models/Channel.ts';
+import { Channel, type ChannelType, type IChannel } from '../models/Channel.ts';
 
 export type ChannelLean = IChannel & { _id: Types.ObjectId };
 
 class ChannelRepository {
 
-    async create(name: string, serverId: string, roleIds: string[]): Promise<ChannelLean> {
-        const channel = await Channel.create({ name, serverId, roleIds });
+    async create(name: string, serverId: string, type: ChannelType, roleIds: string[]): Promise<ChannelLean> {
+        const channel = await Channel.create({ name, serverId, type, roleIds });
         return channel.toObject();
     }
 

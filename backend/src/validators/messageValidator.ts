@@ -1,4 +1,8 @@
 import { body, param, query } from 'express-validator';
+import { isReferenceId } from '../services/AccessService.ts';
+
+/** Un message vise un salon (ID) ou une conversation privée (clé de la paire d'amis) */
+const isReference = (value: unknown) => isReferenceId(value);
 
 export const validateCreateMessage = [
     body('content')
@@ -8,14 +12,14 @@ export const validateCreateMessage = [
         .withMessage('Le message doit contenir entre 1 et 2000 caractères'),
 
     body('referenceId')
-        .isMongoId()
-        .withMessage('Identifiant de salon invalide'),
+        .custom(isReference)
+        .withMessage('Identifiant de salon ou de conversation invalide'),
 ];
 
 export const validateGetMessages = [
     param('referenceId')
-        .isMongoId()
-        .withMessage('Identifiant de salon invalide'),
+        .custom(isReference)
+        .withMessage('Identifiant de salon ou de conversation invalide'),
 
     query('before')
         .optional()

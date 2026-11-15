@@ -61,10 +61,10 @@ class InvitationController {
      * Rejoint un serveur via une invitation
      */
     join = async (req: Request, res: Response): Promise<void> => {
-        const { userId } = getAuthUser(req);
+        const user = getAuthUser(req);
         const { code } = matchedData<{ code: string }>(req);
 
-        const result = await InvitationService.joinByInvitation(code, userId);
+        const result = await InvitationService.joinByInvitation(code, user);
 
         res.status(200).json({
             success: true,

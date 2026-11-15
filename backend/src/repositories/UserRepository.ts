@@ -24,6 +24,16 @@ class UserRepository {
     }
 
     /**
+     * Recherche un utilisateur par son pseudo, sans tenir compte de la casse
+     * @returns L'utilisateur sans le hash du mot de passe, ou null
+     */
+    async findByUsername(username: string): Promise<UserDocument | null> {
+        return await User.findOne({ username })
+            .collation({ locale: 'en', strength: 2 })
+            .select('-hashPassword');
+    }
+
+    /**
      * Recherche un utilisateur par son ID
      * @returns L'utilisateur sans le hash du mot de passe, ou null
      */

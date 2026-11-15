@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { matchedData } from 'express-validator';
 import { getAuthUser } from '../middleware/authHandlers.ts';
+import type { ChannelType } from '../models/Channel.ts';
 import ChannelService from '../services/ChannelService.ts';
 
 class ChannelController {
@@ -26,9 +27,14 @@ class ChannelController {
      */
     create = async (req: Request, res: Response): Promise<void> => {
         const { userId } = getAuthUser(req);
-        const { name, serverId, roleIds } = matchedData<{ name: string; serverId: string; roleIds?: string[] }>(req);
+        const { name, serverId, type, roleIds } = matchedData<{
+            name: string;
+            serverId: string;
+            type?: ChannelType;
+            roleIds?: string[];
+        }>(req);
 
-        const channel = await ChannelService.create(name, serverId, userId, roleIds);
+        const channel = await ChannelService.create(name, serverId, userId, { type, roleIds });
 
         res.status(201).json({
             success: true,

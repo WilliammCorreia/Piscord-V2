@@ -11,6 +11,11 @@ export const validateCreateChannel = [
         .isMongoId()
         .withMessage('Identifiant de serveur invalide'),
 
+    body('type')
+        .optional()
+        .isIn(['text', 'voice'])
+        .withMessage('Le type de salon doit être "text" ou "voice"'),
+
     body('roleIds')
         .optional()
         .isArray({ max: 50 })

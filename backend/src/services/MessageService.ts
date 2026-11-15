@@ -19,18 +19,21 @@ class MessageService {
      * Enregistre un message puis le diffuse aux membres connectés au salon.
      * C'est le serveur qui émet, après persistance : ce que reçoivent les autres
      * est exactement ce qui est en base, avec le véritable auteur.
+     * @param referenceId - ID d'un salon, ou identifiant d'une conversation privée
      */
     async create(content: string, authorId: string, referenceId: string): Promise<PopulatedMessage> {
-        await AccessService.assertChannelAccess(referenceId, authorId);
+        const reference = await AccessService.assertReferenceAccess(referenceId, authorId);
 
         const message = await MessageRepository.create(content, authorId, referenceId);
-        emitMessage(referenceId, message);
+
+        // Message privé : les deux participants sont prévenus, conversation ouverte ou non
+        emitMessage(referenceId, message, reference.kind === 'conversation' ? reference.participantIds : []);
 
         return message;
     }
 
     /**
-     * Récupère une page de messages d'un salon (réservé aux membres du serveur)
+     * Récupère une page de messages d'un salon ou d'une conversation privée
      * @param before - Curseur : ID du plus ancien message déjà chargé
      */
     async getMessagesByReference(
@@ -38,7 +41,7 @@ class MessageService {
         userId: string,
         options: { before?: string; limit?: number } = {}
     ): Promise<MessagePage> {
-        await AccessService.assertChannelAccess(referenceId, userId);
+        await AccessService.assertReferenceAccess(referenceId, userId);
 
         const limit = options.limit ?? DEFAULT_PAGE_SIZE;
 

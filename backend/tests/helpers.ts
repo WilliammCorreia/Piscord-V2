@@ -57,8 +57,13 @@ export async function createServer(user: TestUser, name = 'Mon serveur'): Promis
     return res.body.data.server._id;
 }
 
-export async function createChannel(user: TestUser, serverId: string, name = 'général'): Promise<string> {
-    const res = await user.agent.post('/api/channel').send({ name, serverId }).expect(201);
+export async function createChannel(
+    user: TestUser,
+    serverId: string,
+    name = 'général',
+    type: 'text' | 'voice' = 'text'
+): Promise<string> {
+    const res = await user.agent.post('/api/channel').send({ name, serverId, type }).expect(201);
     return res.body.data._id;
 }
 
@@ -75,4 +80,13 @@ export async function createInvitation(
 export async function joinServer(owner: TestUser, user: TestUser, serverId: string): Promise<void> {
     const code = await createInvitation(owner, serverId);
     await user.agent.post('/api/invitation/join').send({ code }).expect(200);
+}
+
+/** Rend deux utilisateurs amis et renvoie l'identifiant de leur conversation privée */
+export async function befriend(a: TestUser, b: TestUser): Promise<{ friendshipId: string; conversationId: string }> {
+    const request = await a.agent.post('/api/friend/request').send({ username: b.username }).expect(201);
+    const friendshipId: string = request.body.data._id;
+    await b.agent.post(`/api/friend/${friendshipId}/accept`).expect(200);
+
+    return { friendshipId, conversationId: [a.id, b.id].sort().join('_') };
 }

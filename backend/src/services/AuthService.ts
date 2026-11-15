@@ -88,13 +88,18 @@ class AuthService {
 
     /**
      * Inscrit un nouvel utilisateur
-     * @throws {ConflictError} Si l'email est déjà utilisé
+     * @throws {ConflictError} Si l'email ou le pseudo est déjà utilisé
      */
     async signup(data: { email: string; password: string; username: string }): Promise<{ user: PublicUser; tokens: AuthTokens }> {
         const { email, password, username } = data;
 
         if (await UserRepository.findByEmail(email)) {
             throw new ConflictError('Email déjà utilisé.', 'EMAIL_TAKEN');
+        }
+
+        // Le pseudo sert à s'ajouter en ami : deux comptes ne peuvent pas porter le même
+        if (await UserRepository.findByUsername(username)) {
+            throw new ConflictError('Pseudo déjà utilisé.', 'USERNAME_TAKEN');
         }
 
         const hashPassword = await bcrypt.hash(password, env.bcryptRounds);

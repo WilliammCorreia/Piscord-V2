@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './authRoutes.ts';
 import channelRoutes from './channelRoutes.ts';
+import friendRoutes from './friendRoutes.ts';
 import invitationRoutes from './invitationRoutes.ts';
 import messageRoutes from './messageRoutes.ts';
 import serverRoutes from './serverRoutes.ts';
@@ -12,5 +13,6 @@ router.use('/server', serverRoutes);
 router.use('/channel', channelRoutes);
 router.use('/message', messageRoutes);
 router.use('/invitation', invitationRoutes);
+router.use('/friend', friendRoutes);
 
 export default router;
