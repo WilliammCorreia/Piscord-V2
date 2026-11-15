@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HomeService } from '../../services/home.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
@@ -7,6 +7,7 @@ import { AuthService } from '../../../auth/services/auth.service';
   selector: 'app-home-layout',
   standalone: false,
   templateUrl: './home-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home-layout.component.scss'
 })
 export class HomeLayoutComponent {

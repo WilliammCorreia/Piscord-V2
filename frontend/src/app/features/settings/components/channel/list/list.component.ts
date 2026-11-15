@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ChannelService } from '../../../services/channel/channel.service';
 import { Channel, ChannelsResponse, ErrorResponse } from '../../../models/channel.model';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-list',
   standalone: false,
   templateUrl: './list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {

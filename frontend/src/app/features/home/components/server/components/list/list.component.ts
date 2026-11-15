@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ServerService } from '../../services/server.service';
 import { ErrorResponse, Server, UserServersResponse } from '../../models/server.model';
 
@@ -6,6 +6,7 @@ import { ErrorResponse, Server, UserServersResponse } from '../../models/server.
   selector: 'app-list',
   standalone: false,
   templateUrl: './list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './list.component.scss'
 })
 export class ListComponent {

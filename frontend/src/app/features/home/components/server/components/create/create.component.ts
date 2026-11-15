@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServerService } from '../../services/server.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { CreateServerResponse, ErrorResponse } from '../../models/server.model';
   selector: 'app-create',
   standalone: false,
   templateUrl: './create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './create.component.scss'
 })
 export class CreateComponent {

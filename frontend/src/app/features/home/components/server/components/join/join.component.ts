@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServerService } from '../../services/server.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { ErrorResponse, JoinServerResponse } from '../../models/server.model';
   selector: 'app-join',
   standalone: false,
   templateUrl: './join.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './join.component.scss'
 })
 export class JoinComponent {

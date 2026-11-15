@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-settings-layout',
   standalone: false,
   templateUrl: './settings-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings-layout.component.scss'
 })
 export class SettingsLayoutComponent {

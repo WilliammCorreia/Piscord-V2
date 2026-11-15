@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ErrorResponse, SigninRequest, SigninResponse } from '../../models/auth.model';
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   selector: 'app-signin',
   standalone: false,
   templateUrl: './signin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './signin.component.scss'
 })
 export class SigninComponent {

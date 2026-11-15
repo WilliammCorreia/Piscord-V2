@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ServerService } from '../../services/server/server.service';
 import { ChannelService } from '../../services/channel/channel.service';
@@ -10,6 +10,7 @@ import { SocketService } from '../../services/socketio/socket.service';
   selector: 'app-server-layout',
   standalone: false,
   templateUrl: './server-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './server-layout.component.scss'
 })
 export class ServerLayoutComponent {

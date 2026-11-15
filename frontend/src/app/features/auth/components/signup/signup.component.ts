@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from '../../services/auth.service';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
   selector: 'app-signup',
   standalone: false,
   templateUrl: './signup.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent implements OnInit, OnDestroy {

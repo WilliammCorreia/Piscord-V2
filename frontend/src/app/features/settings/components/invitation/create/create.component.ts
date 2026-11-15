@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../../services/invitation/invitation.service';
@@ -8,6 +8,7 @@ import { CreateInvitationResponse, ErrorResponse } from '../../../models/invitat
   selector: 'app-create',
   standalone: false,
   templateUrl: './create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './create.component.scss'
 })
 export class CreateComponent implements OnInit {

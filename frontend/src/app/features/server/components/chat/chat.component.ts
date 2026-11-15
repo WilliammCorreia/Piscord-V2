@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../services/message/message.service';
 import { Message, MessageResponse, MessagesResponse } from '../../models/message.model';
@@ -11,6 +11,7 @@ import { SocketService } from '../../services/socketio/socket.service';
   selector: 'app-chat',
   standalone: false,
   templateUrl: './chat.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent {
