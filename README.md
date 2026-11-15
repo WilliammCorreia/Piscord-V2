@@ -88,7 +88,7 @@ npm --prefix backend run dev
 npm --prefix frontend start
 ```
 
-`ng serve` relaie `/api` et `/socket.io` vers `http://localhost:3000` (voir `frontend/proxy.conf.json`).
+`ng serve` relaie `/api` et `/socket.io` vers `http://localhost:3000` (voir `frontend/proxy.conf.mjs`).
 L'application est alors accessible sur `http://localhost:4200`.
 
 ## 🔐 Variables d'environnement (backend)

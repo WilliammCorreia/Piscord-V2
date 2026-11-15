@@ -13,6 +13,9 @@ services:
   frontend:
     build:
       target: dev
+    environment:
+      # Cible du proxy de `ng serve` (frontend/proxy.conf.mjs) : l'accès direct au port 4200 fonctionne aussi
+      BACKEND_URL: http://backend:3000
     ports:
       - "127.0.0.1:4200:4200"
     volumes:
