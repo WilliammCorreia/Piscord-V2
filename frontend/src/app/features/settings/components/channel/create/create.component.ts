@@ -1,15 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChannelService } from '../../../services/channel/channel.service';
-import { CreateChannelResponse, ErrorResponse } from '../../../models/channel.model';
+import { ChannelService } from '../../../../server/services/channel/channel.service';
+import { apiErrorMessage } from '../../../../../core/models/api.model';
 
 @Component({
-  selector: 'app-create',
-  standalone: false,
-  templateUrl: './create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './create.component.scss'
+    selector: 'app-create',
+    templateUrl: './create.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './create.component.scss',
+    imports: [ReactiveFormsModule]
 })
 export class CreateComponent implements OnInit {
   public formGroup: FormGroup;
@@ -21,11 +21,12 @@ export class CreateComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    // Mêmes bornes que l'API (3 à 24 caractères)
     this.formGroup = this.fb.group({
       name: ['', [
-        Validators.required, 
-        Validators.minLength(3), 
-        Validators.maxLength(32)
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(24)
       ]]
     });
   }
@@ -51,40 +52,23 @@ export class CreateComponent implements OnInit {
         serverId: this.serverId,
         roleIds: []
       };
-      
+
       this.channelService.createChannel(body).subscribe({
-        next: (res) => {
-          if (this.isCreateChannelResponse(res)) {
-            console.log('Salon créé avec succès:', res.data);
-            this.router.navigate(['../list'], { relativeTo: this.route });
-          } else {
-            console.error('Erreur lors de la création:', res);
-            alert('Erreur lors de la création du salon.');
-          }
-        },  
+        next: () => {
+          this.router.navigate(['../list'], { relativeTo: this.route });
+        },
         error: (err) => {
           console.error("Erreur pour créer le salon: ", err);
-          if (err.status === 400) {
-            alert("Données invalides.");
-          } else if (err.status === 403) {
+          if (err.status === 403) {
             alert("Vous n'avez pas les permissions pour créer un salon.");
           } else {
-            alert("Une erreur est survenue, veuillez ressayer plus tard.");
+            alert(apiErrorMessage(err));
           }
         }
       });
     } else {
       this.formGroup.markAllAsTouched();
     }
-  }
-
-  /**
-   * Vérifie si la réponse est de type CreateChannelResponse
-   * @param res Réponse à vérifier
-   * @returns true si la réponse est un CreateChannelResponse, false sinon
-   */
-  isCreateChannelResponse(res: CreateChannelResponse | ErrorResponse): res is CreateChannelResponse {
-    return res.success === true;
   }
 
   /**

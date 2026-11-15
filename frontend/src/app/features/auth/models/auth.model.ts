@@ -1,4 +1,7 @@
+import { ApiResponse } from '../../../core/models/api.model';
+
 export interface UserData {
+  id: string;
   email: string;
   username: string;
 }
@@ -16,27 +19,6 @@ export interface SignupRequest {
 }
 
 // Responses
-export interface SigninResponse {
-  success: boolean;
-  data: {
-    email: string;
-    username: string;
-  };
-  message: string;
-}
+export type SigninResponse = ApiResponse<UserData>;
 
-export interface SignupResponse {
-  success: boolean;
-  data: {
-    email: string;
-    username: string;
-  };
-  message: string;
-}
-
-// Errors
-export interface ErrorResponse {
-  success: boolean;
-  erreur?: string;
-  message?: string;
-}
+export type SignupResponse = ApiResponse<UserData>;

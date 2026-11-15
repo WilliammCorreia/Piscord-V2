@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideTestingDeps } from '../../../../../testing/providers';
 
 import { ServerLayoutComponent } from './server-layout.component';
 
@@ -8,7 +9,8 @@ describe('ServerLayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ServerLayoutComponent]
+      imports: [ServerLayoutComponent],
+      providers: provideTestingDeps()
     })
     .compileComponents();
 

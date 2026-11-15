@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ChannelsResponse, ErrorResponse } from '../../models/channel.model';
+import { ChannelsResponse, CreateChannelRequest, CreateChannelResponse } from '../../models/channel.model';
 import { environment } from '../../../../../environments/environment';
 
 @Injectable({
@@ -16,9 +16,21 @@ export class ChannelService {
    */
   constructor(private http: HttpClient) { }
 
-  getChannelByServer(serverId: string): Observable<ChannelsResponse | ErrorResponse> {
-    return this.http.get<ChannelsResponse | ErrorResponse>(`${this.apiUrl}/server/${serverId}`, {
-      withCredentials: true
-    });
+  /**
+   * Récupère tous les salons d'un serveur
+   * @param serverId ID du serveur
+   * @returns Observable avec la liste des salons
+   */
+  getChannelsByServerId(serverId: string): Observable<ChannelsResponse> {
+    return this.http.get<ChannelsResponse>(`${this.apiUrl}/server/${serverId}`);
+  }
+
+  /**
+   * Crée un nouveau salon
+   * @param channelData Données du salon à créer
+   * @returns Observable avec le salon créé
+   */
+  createChannel(channelData: CreateChannelRequest): Observable<CreateChannelResponse> {
+    return this.http.post<CreateChannelResponse>(`${this.apiUrl}/`, channelData);
   }
 }

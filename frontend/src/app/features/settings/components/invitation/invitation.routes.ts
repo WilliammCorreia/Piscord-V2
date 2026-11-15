@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { InvitationLayoutComponent } from './invitation-layout/invitation-layout.component';
+import { Routes } from '@angular/router';
 import { CreateComponent } from './create/create.component';
+import { InvitationLayoutComponent } from './invitation-layout/invitation-layout.component';
 import { ListComponent } from './list/list.component';
 
-const routes: Routes = [
+export const INVITATION_ROUTES: Routes = [
   {
     path: "",
     component: InvitationLayoutComponent,
@@ -15,9 +14,3 @@ const routes: Routes = [
     ]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class InvitationRoutingModule { }

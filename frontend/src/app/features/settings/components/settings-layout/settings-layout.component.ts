@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-settings-layout',
-  standalone: false,
-  templateUrl: './settings-layout.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './settings-layout.component.scss'
+    selector: 'app-settings-layout',
+    templateUrl: './settings-layout.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './settings-layout.component.scss',
+    imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class SettingsLayoutComponent {
   id: string | null = "";

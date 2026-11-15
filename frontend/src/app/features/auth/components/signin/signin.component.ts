@@ -1,19 +1,20 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { ErrorResponse, SigninRequest, SigninResponse } from '../../models/auth.model';
+import { SigninRequest } from '../../models/auth.model';
 import { Router } from '@angular/router';
+import { apiErrorMessage } from '../../../../core/models/api.model';
 
 /**
  * Composant de connexion utilisateur
  * Gère l'authentification des utilisateurs via un formulaire réactif
  */
 @Component({
-  selector: 'app-signin',
-  standalone: false,
-  templateUrl: './signin.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './signin.component.scss'
+    selector: 'app-signin',
+    templateUrl: './signin.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './signin.component.scss',
+    imports: [ReactiveFormsModule]
 })
 export class SigninComponent {
 
@@ -35,15 +36,6 @@ export class SigninComponent {
       password: ['', [Validators.required]]
     });
   }
-  
-  /**
-   * Vérifie si la réponse est de type SigninResponse (succès) ou ErrorResponse (échec)
-   * @param res Réponse à vérifier, peut être SigninResponse ou ErrorResponse
-   * @returns true si la réponse est un SigninResponse (succès), false si c'est une ErrorResponse (échec)
-   */
-  isSigninResponse(res: SigninResponse | ErrorResponse): res is SigninResponse {
-    return res.success === true;
-  }
 
   /**
    * Gère la soumission du formulaire de connexion
@@ -59,18 +51,17 @@ export class SigninComponent {
 
       this.authService.signin(credentials).subscribe({
         next: (res) => {
-          if (this.isSigninResponse(res)) {
-            this.authService.setUser(res.data);
-            this.router.navigate(["/home"]);
-          }
+          this.authService.setUser(res.data);
+          this.router.navigate(["/home"]);
         },
         error: (err) => {
-          if (err.error?.erreur === "Mot de passe incorrect." || err.error?.erreur === "Email introuvable." ) {
+          // 401 : identifiants incorrects (l'API ne précise pas lequel, volontairement)
+          if (err.status === 401) {
             this.isLoginFailed = true;
             this.formGroup.reset();
           } else {
             console.error('Erreur lors de la connexion:', err);
-            alert("Une erreur est survenue, veuillez ressayer plus tard.");
+            alert(apiErrorMessage(err));
           }
         }
       });

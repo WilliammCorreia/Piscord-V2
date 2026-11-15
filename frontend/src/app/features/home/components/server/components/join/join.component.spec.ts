@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideTestingDeps } from '../../../../../../../testing/providers';
 
 import { JoinComponent } from './join.component';
 
@@ -8,7 +9,8 @@ describe('JoinComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [JoinComponent]
+      imports: [JoinComponent],
+      providers: provideTestingDeps()
     })
     .compileComponents();
 

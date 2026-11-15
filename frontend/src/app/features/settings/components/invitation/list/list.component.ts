@@ -1,14 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationService } from '../../../services/invitation/invitation.service';
-import { Invitation, InvitationsResponse, ErrorResponse } from '../../../models/invitation.model';
+import { Invitation } from '../../../models/invitation.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-list',
-  standalone: false,
-  templateUrl: './list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './list.component.scss'
+    selector: 'app-list',
+    templateUrl: './list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
   invitations: Invitation[] = [];
@@ -33,22 +32,11 @@ export class ListComponent implements OnInit {
   loadInvitations(): void {
     this.invitationService.getInvitationsByServerId(this.serverId).subscribe({
       next: (response) => {
-        if (this.isInvitationsResponse(response)) {
-          this.invitations = response.data;
-        }
+        this.invitations = response.data;
       },
       error: (err) => {
-        console.error('❌ Erreur HTTP:', err);
+        console.error('Erreur HTTP:', err);
       }
     });
-  }
-
-  /**
-   * Vérifie si la réponse est de type InvitationsResponse
-   * @param response Réponse à vérifier
-   * @returns true si la réponse est un InvitationsResponse, false sinon
-   */
-  isInvitationsResponse(response: InvitationsResponse | ErrorResponse): response is InvitationsResponse {
-    return response.success === true;
   }
 }

@@ -1,13 +1,12 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ServerComponent } from './server.component';
-import { ListComponent } from './components/list/list.component';
+import { Routes } from '@angular/router';
 import { CreateComponent } from './components/create/create.component';
 import { JoinComponent } from './components/join/join.component';
+import { ListComponent } from './components/list/list.component';
+import { ServerComponent } from './server.component';
 
-const routes: Routes = [
+export const HOME_SERVER_ROUTES: Routes = [
   {
-    path: "", 
+    path: "",
     component: ServerComponent,
     children: [
       { path: "", redirectTo: "list", pathMatch: "full" },
@@ -17,9 +16,3 @@ const routes: Routes = [
     ]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class ServerRoutingModule { }

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DisconnectResponse } from '../models/home.model';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -16,9 +15,10 @@ export class HomeService {
    */
   constructor(private http: HttpClient) { }
 
-  disconnect(): Observable<DisconnectResponse> {
-    return this.http.get<DisconnectResponse>(`${this.apiUrl}/disconnect`, {
-      withCredentials: true
-    });
+  /**
+   * Déconnecte l'utilisateur côté serveur (révocation de la session, suppression des cookies)
+   */
+  disconnect(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/disconnect`, null);
   }
 }

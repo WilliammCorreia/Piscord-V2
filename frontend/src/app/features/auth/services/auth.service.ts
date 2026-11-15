@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { 
-  SigninRequest, 
-  SigninResponse, 
-  SignupRequest, 
-  SignupResponse, 
-  ErrorResponse, 
+import {
+  SigninRequest,
+  SigninResponse,
+  SignupRequest,
+  SignupResponse,
   UserData
 } from '../models/auth.model';
 import { environment } from '../../../../environments/environment';
+import { SocketService } from '../../server/services/socketio/socket.service';
 
 /**
  * Service d'authentification
@@ -25,11 +25,26 @@ export class AuthService {
   /**
    * Constructeur du service
    * @param http Client HTTP Angular pour les requêtes API
+   * @param socketService Connexion temps réel, fermée à la déconnexion
    */
-  constructor(private http: HttpClient) { 
-    const saved = localStorage.getItem("user");
-    if (saved) {
-      this.userData = JSON.parse(saved);
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService
+  ) {
+    this.userData = this.readStoredUser();
+  }
+
+  /**
+   * Relit l'utilisateur mémorisé. Ce n'est qu'un affichage : la session, elle,
+   * est portée par les cookies httpOnly et vérifiée par l'API à chaque requête.
+   */
+  private readStoredUser(): UserData | null {
+    try {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      localStorage.removeItem("user");
+      return null;
     }
   }
 
@@ -45,23 +60,19 @@ export class AuthService {
   /**
    * Authentifie un utilisateur avec ses identifiants
    * @param credentials Objet contenant email et mot de passe
-   * @returns Observable de la réponse de connexion ou d'erreur
+   * @returns Observable de la réponse de connexion
    */
-  signin(credentials: SigninRequest): Observable<SigninResponse | ErrorResponse> {
-    return this.http.post<SigninResponse | ErrorResponse>(`${this.apiUrl}/signin`, credentials, {
-      withCredentials: true
-    });
+  signin(credentials: SigninRequest): Observable<SigninResponse> {
+    return this.http.post<SigninResponse>(`${this.apiUrl}/signin`, credentials);
   }
 
   /**
    * Crée un nouveau compte utilisateur
    * @param credentials Objet contenant email, mot de passe et nom d'utilisateur
-   * @returns Observable de la réponse d'inscription ou d'erreur
+   * @returns Observable de la réponse d'inscription
    */
-  signup(credentials: SignupRequest): Observable<SignupResponse | ErrorResponse> {
-    return this.http.post<SignupResponse | ErrorResponse>(`${this.apiUrl}/signup`, credentials, {
-      withCredentials: true
-    });
+  signup(credentials: SignupRequest): Observable<SignupResponse> {
+    return this.http.post<SignupResponse>(`${this.apiUrl}/signup`, credentials);
   }
 
   /**
@@ -73,10 +84,12 @@ export class AuthService {
   }
 
   /**
-   * Déconnecte l'utilisateur et nettoie les données locales
+   * Nettoie les données locales et ferme la connexion temps réel.
+   * Le socket est lié à la session : il ne doit pas survivre à un changement d'utilisateur.
    */
   logout(): void {
     this.userData = null;
     localStorage.removeItem("user");
+    this.socketService.disconnect();
   }
 }

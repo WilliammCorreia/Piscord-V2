@@ -132,3 +132,15 @@ textarea {
   font-size: 0.875rem;
   font-style: italic;
 }
+
+.load-older {
+    display: block;
+    margin: var(--spacing-md) auto;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    cursor: pointer;
+
+    &:disabled {
+        cursor: default;
+        opacity: 0.6;
+    }
+}

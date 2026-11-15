@@ -1,37 +1,35 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ServerService } from '../../services/server.service';
-import { ErrorResponse, Server, UserServersResponse } from '../../models/server.model';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ServerService } from '../../../../../server/services/server/server.service';
+import { Server } from '../../../../../server/models/server.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-list',
-  standalone: false,
-  templateUrl: './list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './list.component.scss'
+    selector: 'app-list',
+    templateUrl: './list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './list.component.scss',
+    imports: [RouterLink]
 })
-export class ListComponent {
+export class ListComponent implements OnInit {
   protected servers: Server[] = [];
 
   constructor(private serverService: ServerService) { }
 
-  async ngOnInit() {
-    await this.listServers();
+  ngOnInit(): void {
+    this.listServers();
   }
 
-  isUserResponse(res: UserServersResponse | ErrorResponse): res is UserServersResponse {
-    return res.success === true;
-  }
-
-  async listServers() {
+  listServers(): void {
     this.serverService.getServerByUser().subscribe({
       next: (res) => {
-        if (this.isUserResponse(res)) {
-          this.servers = res.data;
-        }
+        this.servers = res.data;
       },
       error: (err) => {
         console.error("Erreur la récupération des serveurs:", err);
-        alert("Une erreur est survenue, veuillez ressayer plus tard.");
+        // Sur un 401, l'intercepteur renvoie déjà vers la connexion
+        if (err.status !== 401) {
+          alert("Une erreur est survenue, veuillez ressayer plus tard.");
+        }
       }
     });
   }

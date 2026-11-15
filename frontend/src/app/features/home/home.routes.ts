@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { HomeLayoutComponent } from './components/home-layout/home-layout.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
-const routes: Routes = [
+export const HOME_ROUTES: Routes = [
   {
     path: "",
     component: HomeLayoutComponent,
@@ -19,14 +18,8 @@ const routes: Routes = [
       },
       {
         path: "server",
-        loadChildren: () => import("./components/server/server-module").then(m => m.ServerModule)
+        loadChildren: () => import("./components/server/server.routes").then(m => m.HOME_SERVER_ROUTES)
       }
     ]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class HomeRoutingModule { }

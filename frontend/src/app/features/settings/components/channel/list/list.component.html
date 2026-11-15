@@ -4,7 +4,7 @@
   </header>
   <div class="container">
     <ul>
-      @for (channel of channels; track channel) {
+      @for (channel of channels; track channel._id) {
         <li>
           <a>{{ channel.name }}</a>
         </li>

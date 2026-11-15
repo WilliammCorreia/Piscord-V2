@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideTestingDeps } from '../../../../../testing/providers';
 
 import { WelcomeComponent } from './welcome.component';
 
@@ -8,7 +9,8 @@ describe('WelcomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [WelcomeComponent]
+      imports: [WelcomeComponent],
+      providers: provideTestingDeps()
     })
     .compileComponents();
 

@@ -13,7 +13,7 @@
           </div>
           <article>
             <ul>
-              @for (member of members; track member) {
+              @for (member of members; track member._id) {
                 <li>{{member.username}}</li>
               }
             </ul>
@@ -28,8 +28,8 @@
           <h3>Salons</h3>
         </div>
         <article>
-          @for (channel of channels; track channel) {
-            <a [routerLink]="['channel', channel._id]" routerLinkActive="active" (click)="changeChannel(channel._id)">
+          @for (channel of channels; track channel._id) {
+            <a [routerLink]="['channel', channel._id]" routerLinkActive="active">
               # {{channel.name}}
             </a>
           }

@@ -1,36 +1,27 @@
+import { ApiResponse } from '../../../core/models/api.model';
+
 export interface Invitation {
     _id: string;
     code: string;
     serverId: string;
     createdBy: string;
     isActive: boolean;
-    expiredAt?: Date;
+    expiredAt?: string;
     maxUsage?: number;
     currentUsage: number;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     __v: number;
 }
 
+// Requests
 export interface CreateInvitationRequest {
     serverId: string;
     expiredAt?: string;
     maxUsage?: number;
 }
 
-export interface CreateInvitationResponse {
-    success: boolean;
-    data: Invitation;
-    message: string;
-}
+// Responses
+export type CreateInvitationResponse = ApiResponse<Invitation>;
 
-export interface InvitationsResponse {
-    success: boolean;
-    data: Invitation[];
-    message: string;
-}
-
-export interface ErrorResponse {
-    success: boolean;
-    message: string;
-}
+export type InvitationsResponse = ApiResponse<Invitation[]>;

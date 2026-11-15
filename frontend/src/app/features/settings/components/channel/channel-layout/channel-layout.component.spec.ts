@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideTestingDeps } from '../../../../../../testing/providers';
 
 import { ChannelLayoutComponent } from './channel-layout.component';
 
@@ -8,7 +9,8 @@ describe('ChannelLayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ChannelLayoutComponent]
+      imports: [ChannelLayoutComponent],
+      providers: provideTestingDeps()
     })
     .compileComponents();
 

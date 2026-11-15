@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { ChannelService } from '../../../services/channel/channel.service';
-import { Channel, ChannelsResponse, ErrorResponse } from '../../../models/channel.model';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChannelService } from '../../../../server/services/channel/channel.service';
+import { Channel } from '../../../../server/models/channel.model';
 import { ActivatedRoute } from '@angular/router';
+import { apiErrorMessage } from '../../../../../core/models/api.model';
 
 @Component({
-  selector: 'app-list',
-  standalone: false,
-  templateUrl: './list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './list.component.scss'
+    selector: 'app-list',
+    templateUrl: './list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
   channels: Channel[] = [];
@@ -43,28 +43,14 @@ export class ListComponent implements OnInit {
     this.channelService.getChannelsByServerId(this.serverId).subscribe({
       next: (response) => {
         this.loading = false;
-        if (this.isChannelsResponse(response)) {
-          this.channels = response.data;
-        } else {
-          this.error = response.message || 'Erreur lors du chargement des salons';
-          console.error('Erreur:', response);
-        }
+        this.channels = response.data;
       },
       error: (err) => {
         this.loading = false;
-        this.error = 'Erreur lors du chargement des salons';
+        this.error = apiErrorMessage(err, 'Erreur lors du chargement des salons');
         console.error('Erreur HTTP:', err);
       }
     });
-  }
-
-  /**
-   * Vérifie si la réponse est de type ChannelsResponse
-   * @param response Réponse à vérifier
-   * @returns true si la réponse est un ChannelsResponse, false sinon
-   */
-  isChannelsResponse(response: ChannelsResponse | ErrorResponse): response is ChannelsResponse {
-    return response.success === true;
   }
 
   /**

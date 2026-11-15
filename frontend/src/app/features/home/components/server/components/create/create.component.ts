@@ -1,15 +1,15 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ServerService } from '../../services/server.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ServerService } from '../../../../../server/services/server/server.service';
 import { Router } from '@angular/router';
-import { CreateServerResponse, ErrorResponse } from '../../models/server.model';
+import { apiErrorMessage } from '../../../../../../core/models/api.model';
 
 @Component({
-  selector: 'app-create',
-  standalone: false,
-  templateUrl: './create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './create.component.scss'
+    selector: 'app-create',
+    templateUrl: './create.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './create.component.scss',
+    imports: [ReactiveFormsModule]
 })
 export class CreateComponent {
   public formGroup: FormGroup;
@@ -19,8 +19,9 @@ export class CreateComponent {
     private serverService: ServerService,
     private router: Router
   ) {
+    // Mêmes bornes que l'API (3 à 24 caractères)
     this.formGroup = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]]
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(24)]]
     });
   }
 
@@ -34,26 +35,19 @@ export class CreateComponent {
 
     if (this.formGroup.valid) {
       const body = { name: this.formGroup.value.name };
-      
+
       this.serverService.createServer(body).subscribe({
         next: (res) => {
-          if (this.isCreateServerResponse(res)) {
-            const id = res.data?.server._id;
-            this.router.navigate([`/server/${id}`]);
-          }
-        },  
+          this.router.navigate(['/server', res.data.server._id]);
+        },
         error: (err) => {
           console.error("Erreur la création du serveur: ", err);
-          alert("Une erreur est survenue, veuillez ressayer plus tard.");
+          alert(apiErrorMessage(err));
         }
       });
     } else {
       this.formGroup.markAllAsTouched();
     }
-  }
-
-  isCreateServerResponse(res: CreateServerResponse | ErrorResponse): res is CreateServerResponse {
-    return res.success === true;
   }
 
   /**

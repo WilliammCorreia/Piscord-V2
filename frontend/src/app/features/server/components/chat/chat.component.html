@@ -7,14 +7,19 @@
   </header>
   <div class="container">
     <main #messagesContainer>
-      @for (message of messages; track message) {
+      @if (hasMore) {
+        <button type="button" class="load-older" [disabled]="loadingOlder" (click)="loadOlderMessages()">
+          {{ loadingOlder ? 'Chargement...' : 'Charger les messages précédents' }}
+        </button>
+      }
+      @for (message of messages; track message._id) {
         <div class="message">
           <div class="head">
             <div class="photo">{{ message.authorId.username.charAt(0).toUpperCase() }}</div>
             <h4>{{ message.authorId.username }}</h4>
           </div>
           <div class="msg-content">
-            <span>{{ formatTime(message.updatedAt) }}</span>
+            <span>{{ formatTime(message.createdAt) }}</span>
             <p>{{ message.content }}</p>
           </div>
         </div>
@@ -25,8 +30,7 @@
         placeholder="Envoyer un message..."
         (keydown)="handleKeyDown($event)"
         [(ngModel)]="textMessage"
-        maxlength="2000">
-      ></textarea>
+        maxlength="2000"></textarea>
     </div>
   </div>
 </div>

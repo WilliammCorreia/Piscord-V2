@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MessageResponse, ErrorResponse, MessagesResponse } from '../../models/message.model';
+import { CreateMessageRequest, MessageResponse, MessagesResponse } from '../../models/message.model';
 import { environment } from '../../../../../environments/environment';
 
 @Injectable({
@@ -15,26 +15,25 @@ export class MessageService {
    * @param http Client HTTP Angular pour les requêtes API
    */
   constructor(private http: HttpClient) { }
-  
+
   /**
    * Envoie un nouveau message
    * @param body Objet contenant le contenu et la référence du message
-   * @returns Observable de la réponse de création de message ou d'erreur
+   * @returns Observable de la réponse de création de message
    */
-  postMessage(body: Object): Observable<MessageResponse | ErrorResponse> {
-    return this.http.post<MessageResponse | ErrorResponse>(`${this.apiUrl}/`, body, {
-      withCredentials: true
-    });
+  postMessage(body: CreateMessageRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/`, body);
   }
 
   /**
-   * Récupère les messages d'un channel spécifique
+   * Récupère une page de messages d'un channel, par ordre chronologique
    * @param channelId ID du channel dont on veut récupérer les messages
-   * @returns Observable de la réponse contenant la liste des messages ou d'erreur
+   * @param before Curseur : ID du plus ancien message déjà chargé (absent = messages les plus récents)
+   * @returns Observable de la réponse contenant la liste des messages
    */
-  getMessagesByChannel(channelId: string, page: number = 0): Observable<MessagesResponse | ErrorResponse> {
-    return this.http.get<MessagesResponse | ErrorResponse>(`${this.apiUrl}/reference/${channelId}?page=${page}`, {
-      withCredentials: true
-    });
+  getMessagesByChannel(channelId: string, before?: string): Observable<MessagesResponse> {
+    const params = before ? new HttpParams().set('before', before) : undefined;
+
+    return this.http.get<MessagesResponse>(`${this.apiUrl}/reference/${channelId}`, { params });
   }
 }

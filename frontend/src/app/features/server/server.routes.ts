@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ServerLayoutComponent } from './components/server-layout/server-layout.component';
+import { Routes } from '@angular/router';
 import { ChatComponent } from './components/chat/chat.component';
+import { ServerLayoutComponent } from './components/server-layout/server-layout.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 
-const routes: Routes = [
+export const SERVER_ROUTES: Routes = [
   {
     path: ":id",
     component: ServerLayoutComponent,
@@ -15,9 +14,3 @@ const routes: Routes = [
     ]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class ServerRoutingModule { }

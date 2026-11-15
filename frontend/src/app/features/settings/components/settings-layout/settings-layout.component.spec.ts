@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideTestingDeps } from '../../../../../testing/providers';
 
 import { SettingsLayoutComponent } from './settings-layout.component';
 
@@ -8,7 +9,8 @@ describe('SettingsLayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SettingsLayoutComponent]
+      imports: [SettingsLayoutComponent],
+      providers: provideTestingDeps()
     })
     .compileComponents();
 

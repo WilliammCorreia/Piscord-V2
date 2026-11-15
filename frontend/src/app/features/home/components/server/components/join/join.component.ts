@@ -1,15 +1,15 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ServerService } from '../../services/server.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ServerService } from '../../../../../server/services/server/server.service';
 import { Router } from '@angular/router';
-import { ErrorResponse, JoinServerResponse } from '../../models/server.model';
+import { apiErrorMessage } from '../../../../../../core/models/api.model';
 
 @Component({
-  selector: 'app-join',
-  standalone: false,
-  templateUrl: './join.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './join.component.scss'
+    selector: 'app-join',
+    templateUrl: './join.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './join.component.scss',
+    imports: [ReactiveFormsModule]
 })
 export class JoinComponent {
   public formGroup: FormGroup;
@@ -34,36 +34,25 @@ export class JoinComponent {
 
     if (this.formGroup.valid) {
       const body = { code: this.formGroup.value.code };
-      
+
       this.serverService.joinServer(body).subscribe({
         next: (res) => {
-          if (this.isJoinServerResponse(res)) {
-            const id = res.data?.server._id;
-            console.log('Serveur rejoint avec succès:', res.data);
-            this.router.navigate([`/server/${id}`]);
-          } else {
-            console.error('Erreur lors du rejoignement:', res);
-            alert('Code de serveur invalide ou serveur introuvable.');
-          }
-        },  
+          this.router.navigate(['/server', res.data.server._id]);
+        },
         error: (err) => {
           console.error("Erreur pour rejoindre le serveur: ", err);
           if (err.status === 404) {
             alert("Code de serveur invalide.");
-          } else if (err.status === 409) {
-            alert("Vous êtes déjà membre de ce serveur.");
           } else {
-            alert("Une erreur est survenue, veuillez ressayer plus tard.");
+            // 409 déjà membre, 400 invitation expirée ou épuisée, 429 trop de tentatives :
+            // l'API fournit un message adapté à chaque cas
+            alert(apiErrorMessage(err));
           }
         }
       });
     } else {
       this.formGroup.markAllAsTouched();
     }
-  }
-
-  isJoinServerResponse(res: JoinServerResponse | ErrorResponse): res is JoinServerResponse {
-    return res.success === true;
   }
 
   /**

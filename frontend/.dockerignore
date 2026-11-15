@@ -3,3 +3,9 @@
 
 # Angular cache
 /.angular
+
+# Build output
+/dist
+
+# Docker image
+Dockerfile

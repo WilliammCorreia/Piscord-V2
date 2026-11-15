@@ -4,7 +4,7 @@
   </header>
   <div class="container">
     <ul>
-      @for (invitation of invitations; track invitation) {
+      @for (invitation of invitations; track invitation._id) {
         <li>
           <a>{{ invitation.code }}</a>
         </li>

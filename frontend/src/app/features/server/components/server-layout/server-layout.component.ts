@@ -1,111 +1,87 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ServerService } from '../../services/server/server.service';
 import { ChannelService } from '../../services/channel/channel.service';
-import { ErrorResponse, Member, ServersResponse } from '../../models/server.model';
-import { Channel, ChannelsResponse } from '../../models/channel.model';
-import { SocketService } from '../../services/socketio/socket.service';
+import { Member } from '../../models/server.model';
+import { Channel } from '../../models/channel.model';
 
 @Component({
-  selector: 'app-server-layout',
-  standalone: false,
-  templateUrl: './server-layout.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './server-layout.component.scss'
+    selector: 'app-server-layout',
+    templateUrl: './server-layout.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './server-layout.component.scss',
+    imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
-export class ServerLayoutComponent {
+export class ServerLayoutComponent implements OnInit {
   id: string | null = "";
   members: Member[] = [];
   channels: Channel[] = [];
-  currentChannelId: string = "";
 
   /**
    * Constructeur du composant ServerLayout
    * @param route Service pour accéder aux paramètres de route
+   * @param router Service de navigation
    * @param serverService Service pour les opérations liées aux serveurs
+   * @param channelService Service pour les opérations liées aux salons
    */
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private serverService: ServerService,
-    private channelService: ChannelService,
-    private socketService: SocketService
+    private channelService: ChannelService
   ) { }
 
   /**
-   * Initialise le composant en récupérant l'ID du serveur depuis l'URL et charge la liste des utilisateurs
+   * Initialise le composant en récupérant l'ID du serveur depuis l'URL,
+   * puis charge la liste des membres et celle des salons
    */
-  async ngOnInit() {
+  ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get("id");
     if (typeof this.id === "string") {
-      await this.listUsers(this.id);
-      await this.listChannels(this.id);
+      this.listUsers(this.id);
+      this.listChannels(this.id);
     }
-  }
-
-  /**
-   * Vérifie si la réponse est de type ServersResponse
-   * @param res Réponse à vérifier
-   * @returns true si la réponse est un ServersResponse, false sinon
-   */
-  isServersResponse(res: ServersResponse | ErrorResponse): res is ServersResponse {
-    return res.success === true;
-  }
-
-    /**
-   * Vérifie si la réponse est de type ChannelsResponse
-   * @param res Réponse à vérifier
-   * @returns true si la réponse est un ChannelsResponse, false sinon
-   */
-  isChannelsResponse(res: ChannelsResponse | ErrorResponse): res is ChannelsResponse {
-    return res.success === true;
   }
 
   /**
    * Récupère la liste des membres d'un serveur spécifique
    * @param serverId ID du serveur dont on veut récupérer les membres
    */
-  async listUsers(serverId: string) {
+  listUsers(serverId: string): void {
     this.members = [];
 
-    this.serverService.getServerByUser().subscribe({
+    this.serverService.getServerById(serverId).subscribe({
       next: (res) => {
-        if (this.isServersResponse(res)) {
-          for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i]._id === serverId) {
-              const server = res.data[i];
-              this.members = server.memberIds;
-            }
-          }
-        }
+        this.members = res.data.memberIds;
       },
       error: (err) => {
         console.error("Erreur lors de la récupération des membres: ", err);
-        alert("Une erreur est survenue, veuillez ressayer plus tard.");
+
+        // Serveur inexistant, identifiant invalide ou utilisateur non membre : rien à afficher ici
+        if ([400, 403, 404].includes(err.status)) {
+          this.router.navigate(["/home/server"]);
+        } else if (err.status !== 401) {
+          alert("Une erreur est survenue, veuillez ressayer plus tard.");
+        }
       }
     });
   }
 
-  async listChannels(serverId: string) {
+  /**
+   * Récupère la liste des salons d'un serveur spécifique
+   * @param serverId ID du serveur dont on veut récupérer les salons
+   */
+  listChannels(serverId: string): void {
     this.channels = [];
 
-    this.channelService.getChannelByServer(serverId).subscribe({
+    this.channelService.getChannelsByServerId(serverId).subscribe({
       next: (res) => {
-        if (this.isChannelsResponse(res)) {
-          this.channels = res.data;
-        }
+        this.channels = res.data;
       },
       error: (err) => {
+        // Les erreurs d'accès sont déjà traitées par listUsers
         console.error("Erreur lors de la récupération des salons: ", err);
-        alert("Une erreur est survenue, veuillez ressayer plus tard.");
       }
     });
-  }
-
-  changeChannel(newChannelId: string) {
-    if (this.currentChannelId != "") {
-      this.socketService.emit("leave-channel", this.currentChannelId);
-    }
-    this.socketService.emit("join-channel", newChannelId);
-    this.currentChannelId = newChannelId;
   }
 }

@@ -4,7 +4,7 @@
   </header>
   <div class="container">
     <ul>
-      @for (server of servers; track server) {
+      @for (server of servers; track server._id) {
         <li>
           <a [routerLink]="['/server', server._id]">{{ server.name }}</a>
         </li>

@@ -1,15 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../../services/invitation/invitation.service';
-import { CreateInvitationResponse, ErrorResponse } from '../../../models/invitation.model';
+import { apiErrorMessage } from '../../../../../core/models/api.model';
 
 @Component({
-  selector: 'app-create',
-  standalone: false,
-  templateUrl: './create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './create.component.scss'
+    selector: 'app-create',
+    templateUrl: './create.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './create.component.scss',
+    imports: [ReactiveFormsModule]
 })
 export class CreateComponent implements OnInit {
   public formGroup: FormGroup;
@@ -54,41 +54,24 @@ export class CreateComponent implements OnInit {
         expiredAt: expiredAt.toISOString(),
         maxUsage: this.formGroup.value.maxUsage
       };
-      
+
       this.invitationService.createInvitation(body).subscribe({
-        next: (res) => {
-          if (this.isCreateInvitationResponse(res)) {
-            console.log('Invitation créée avec succès:', res.data);
-            // Rediriger vers la liste des invitations
-            this.router.navigate(['../list'], { relativeTo: this.route });
-          } else {
-            console.error('Erreur lors de la création:', res);
-            alert('Erreur lors de la création de l\'invitation.');
-          }
-        },  
+        next: () => {
+          // Rediriger vers la liste des invitations
+          this.router.navigate(['../list'], { relativeTo: this.route });
+        },
         error: (err) => {
           console.error("Erreur pour créer l'invitation: ", err);
-          if (err.status === 400) {
-            alert("Données invalides.");
-          } else if (err.status === 403) {
+          if (err.status === 403) {
             alert("Vous n'avez pas les permissions pour créer une invitation.");
           } else {
-            alert("Une erreur est survenue, veuillez ressayer plus tard.");
+            alert(apiErrorMessage(err));
           }
         }
       });
     } else {
       this.formGroup.markAllAsTouched();
     }
-  }
-
-  /**
-   * Vérifie si la réponse est de type CreateInvitationResponse
-   * @param res Réponse à vérifier
-   * @returns true si la réponse est un CreateInvitationResponse, false sinon
-   */
-  isCreateInvitationResponse(res: CreateInvitationResponse | ErrorResponse): res is CreateInvitationResponse {
-    return res.success === true;
   }
 
   /**

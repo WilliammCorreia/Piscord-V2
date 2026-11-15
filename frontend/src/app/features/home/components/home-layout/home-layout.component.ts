@@ -1,14 +1,14 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HomeService } from '../../services/home.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
-  selector: 'app-home-layout',
-  standalone: false,
-  templateUrl: './home-layout.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './home-layout.component.scss'
+    selector: 'app-home-layout',
+    templateUrl: './home-layout.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './home-layout.component.scss',
+    imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class HomeLayoutComponent {
 
@@ -20,7 +20,7 @@ export class HomeLayoutComponent {
 
   onDisconnect(): void {
     this.homeService.disconnect().subscribe({
-      next: (res) => {
+      next: () => {
         this.authService.logout();
         this.router.navigate(["/auth"]);
       },

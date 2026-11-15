@@ -1,23 +1,25 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { SignupRequest, SignupResponse, ErrorResponse } from '../../models/auth.model';
+import { SignupRequest } from '../../models/auth.model';
 import { Router } from '@angular/router';
+import { apiErrorCode, apiErrorMessage } from '../../../../core/models/api.model';
 
 /**
  * Composant d'inscription utilisateur
  * Gère la création de compte utilisateur via un formulaire réactif avec validation
  */
 @Component({
-  selector: 'app-signup',
-  standalone: false,
-  templateUrl: './signup.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './signup.component.scss'
+    selector: 'app-signup',
+    templateUrl: './signup.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './signup.component.scss',
+    imports: [ReactiveFormsModule]
 })
 export class SignupComponent implements OnInit, OnDestroy {
 
+  // Mêmes règles que le validateur de l'API (backend/src/validators/userValidator.ts)
   public formGroup: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(64)]),
     password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?!.*\s).{12,64}$/)]),
@@ -45,15 +47,6 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.subscription = this.formGroup.get("email")?.valueChanges.subscribe(() => {
       this.isEmailAlreadyUsed = false;
     });
-  }
-
-  /**
-   * Vérifie si la réponse est de type SignupResponse (succès) ou ErrorResponse (échec)
-   * @param res Réponse à vérifier, peut être SignupResponse ou ErrorResponse
-   * @returns true si la réponse est un SignupResponse (succès), false si c'est une ErrorResponse (échec)
-   */
-  isSignupResponse(res: SignupResponse | ErrorResponse): res is SignupResponse {
-    return res.success === true;
   }
 
   /**
@@ -112,17 +105,15 @@ export class SignupComponent implements OnInit, OnDestroy {
 
       this.authService.signup(credentials).subscribe({
         next: (res) => {
-          if (this.isSignupResponse(res)) {
-            this.authService.setUser(res.data);
-            this.router.navigate(["/home"]);
-          }
+          this.authService.setUser(res.data);
+          this.router.navigate(["/home"]);
         },
         error: (err) => {
-          if (err.error?.erreur === "Email déjà utilisé.") {
+          if (apiErrorCode(err) === "EMAIL_TAKEN") {
             this.isEmailAlreadyUsed = true;
           } else {
             console.error("Erreur lors de l'inscription:", err);
-            alert("Une erreur est survenue, veuillez ressayer plus tard.");
+            alert(apiErrorMessage(err));
           }
         }
       });

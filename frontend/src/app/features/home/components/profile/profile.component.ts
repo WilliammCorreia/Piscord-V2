@@ -2,11 +2,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
-  selector: 'app-profile',
-  standalone: false,
-  templateUrl: './profile.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './profile.component.scss'
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
   name: string = '';

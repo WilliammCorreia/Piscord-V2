@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreateInvitationRequest, CreateInvitationResponse, InvitationsResponse, ErrorResponse } from '../../models/invitation.model';
+import { CreateInvitationRequest, CreateInvitationResponse, InvitationsResponse } from '../../models/invitation.model';
 import { environment } from '../../../../../environments/environment';
 
 @Injectable({
@@ -17,10 +17,8 @@ export class InvitationService {
    * @param serverId ID du serveur
    * @returns Observable avec la liste des invitations
    */
-  getInvitationsByServerId(serverId: string): Observable<InvitationsResponse | ErrorResponse> {
-    return this.http.get<InvitationsResponse | ErrorResponse>(`${this.apiUrl}/server/${serverId}`, {
-      withCredentials: true
-    });
+  getInvitationsByServerId(serverId: string): Observable<InvitationsResponse> {
+    return this.http.get<InvitationsResponse>(`${this.apiUrl}/server/${serverId}`);
   }
 
   /**
@@ -28,9 +26,7 @@ export class InvitationService {
    * @param invitationData Données de l'invitation à créer
    * @returns Observable avec l'invitation créée
    */
-  createInvitation(invitationData: CreateInvitationRequest): Observable<CreateInvitationResponse | ErrorResponse> {
-    return this.http.post<CreateInvitationResponse | ErrorResponse>(`${this.apiUrl}/`, invitationData, {
-      withCredentials: true
-    });
+  createInvitation(invitationData: CreateInvitationRequest): Observable<CreateInvitationResponse> {
+    return this.http.post<CreateInvitationResponse>(`${this.apiUrl}/`, invitationData);
   }
 }
