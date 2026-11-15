@@ -4,5 +4,12 @@ node_modules/
 # Environment variables
 .env
 
+# Build output
+dist/
+
+# Tests
+tests/
+vitest.config.ts
+
 # Docker image
 Dockerfile

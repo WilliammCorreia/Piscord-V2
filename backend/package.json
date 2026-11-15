@@ -1,19 +1,45 @@
 {
+  "name": "piscord-backend",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "dev": "nodemon --legacy-watch server.js"
+    "dev": "nodemon --legacy-watch --watch src --ext ts --exec \"node src/server.ts\"",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "express-validator": "^7.2.1",
+    "express-rate-limit": "^8.7.4",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.1",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.0",
+    "@types/supertest": "^6.0.3",
+    "mongodb-memory-server": "^11.3.0",
+    "nodemon": "^3.1.14",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^7.3.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
   }
 }
