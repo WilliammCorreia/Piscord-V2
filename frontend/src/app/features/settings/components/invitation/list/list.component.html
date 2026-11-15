@@ -1,12 +1,14 @@
 <div class="content">
-    <header>
-        <h1># Lister</h1>
-    </header>
-    <div class="container">
-        <ul>
-            <li *ngFor="let invitation of invitations">
-                <a>{{ invitation.code }}</a>
-            </li>
-        </ul>
-    </div>
+  <header>
+    <h1># Lister</h1>
+  </header>
+  <div class="container">
+    <ul>
+      @for (invitation of invitations; track invitation) {
+        <li>
+          <a>{{ invitation.code }}</a>
+        </li>
+      }
+    </ul>
+  </div>
 </div>

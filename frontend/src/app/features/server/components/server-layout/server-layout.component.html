@@ -1,41 +1,43 @@
 <div class="content">
-    <aside>
-        <header>
-            <a routerLink="/home">
-                <h2>Piscord</h2>
+  <aside>
+    <header>
+      <a routerLink="/home">
+        <h2>Piscord</h2>
+      </a>
+    </header>
+    <section>
+      <div class="users">
+        <div class="top">
+          <div class="title">
+            <h3>Utilisateurs</h3>
+          </div>
+          <article>
+            <ul>
+              @for (member of members; track member) {
+                <li>{{member.username}}</li>
+              }
+            </ul>
+          </article>
+        </div>
+        <div class="settings">
+          <a [routerLink]="['/settings', id]" routerLinkActive="active">Réglages</a>
+        </div>
+      </div>
+      <div class="channels">
+        <div class="title">
+          <h3>Salons</h3>
+        </div>
+        <article>
+          @for (channel of channels; track channel) {
+            <a [routerLink]="['channel', channel._id]" routerLinkActive="active" (click)="changeChannel(channel._id)">
+              # {{channel.name}}
             </a>
-        </header>
-        <section>
-            <div class="users">
-                <div class="top">
-                    <div class="title">
-                        <h3>Utilisateurs</h3>
-                    </div>
-                    <article>
-                        <ul>
-                            <li *ngFor="let member of members">{{member.username}}</li>
-                        </ul>
-                    </article>
-                </div>
-                <div class="settings">
-                    <a [routerLink]="['/settings', id]" routerLinkActive="active">Réglages</a>
-                </div>
-            </div>
-            <div class="channels">
-                <div class="title">
-                    <h3>Salons</h3>
-                </div>
-                <article>
-                    <ng-container *ngFor="let channel of channels">
-                        <a [routerLink]="['channel', channel._id]" routerLinkActive="active" (click)="changeChannel(channel._id)">
-                            # {{channel.name}}
-                        </a>
-                    </ng-container>
-                </article>
-            </div>
-        </section>
-    </aside>
-    <main>
-        <router-outlet></router-outlet>
-    </main>
+          }
+        </article>
+      </div>
+    </section>
+  </aside>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
 </div>

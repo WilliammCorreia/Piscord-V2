@@ -1,30 +1,32 @@
 <div class="content">
-    <header>
-        <h1># Chat</h1>
-        <div class="typing-indicator" *ngIf="typingText">{{ typingText }}</div>
-    </header>
-    <div class="container">
-        <main #messagesContainer>
-            <ng-container *ngFor="let message of messages">
-                <div class="message">
-                    <div class="head">
-                        <div class="photo">{{ message.authorId.username.charAt(0).toUpperCase() }}</div>
-                        <h4>{{ message.authorId.username }}</h4>
-                    </div>
-                    <div class="msg-content">
-                        <span>{{ formatTime(message.updatedAt) }}</span>
-                        <p>{{ message.content }}</p>
-                    </div>
-                </div>
-            </ng-container>
-        </main>
-        <div class="input-chat">
-            <textarea
-                placeholder="Envoyer un message..."
-                (keydown)="handleKeyDown($event)"
-                [(ngModel)]="textMessage"
-                maxlength="2000">
-            ></textarea>
+  <header>
+    <h1># Chat</h1>
+    @if (typingText) {
+      <div class="typing-indicator">{{ typingText }}</div>
+    }
+  </header>
+  <div class="container">
+    <main #messagesContainer>
+      @for (message of messages; track message) {
+        <div class="message">
+          <div class="head">
+            <div class="photo">{{ message.authorId.username.charAt(0).toUpperCase() }}</div>
+            <h4>{{ message.authorId.username }}</h4>
+          </div>
+          <div class="msg-content">
+            <span>{{ formatTime(message.updatedAt) }}</span>
+            <p>{{ message.content }}</p>
+          </div>
         </div>
+      }
+    </main>
+    <div class="input-chat">
+      <textarea
+        placeholder="Envoyer un message..."
+        (keydown)="handleKeyDown($event)"
+        [(ngModel)]="textMessage"
+        maxlength="2000">
+      ></textarea>
     </div>
+  </div>
 </div>
