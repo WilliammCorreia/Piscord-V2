@@ -1,12 +1,13 @@
-# Configuration de production : Piscord tourne derrière le reverse proxy du VPS, qui porte le HTTPS.
-# En local, docker-compose.override.yml s'y ajoute automatiquement (développement).
+# Configuration de production : Piscord tourne derrière le reverse proxy du VPS (Traefik),
+# qui porte le HTTPS. En local, docker-compose.override.yml s'y ajoute automatiquement (développement).
 #
-# Sur le VPS :            docker compose -f docker-compose.yml up -d --build
+# Sur le VPS, c'est la chaîne de déploiement qui lance tout (.github/workflows/deploy.yml).
 # Essai sur sa machine :  docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+#
+# Les variables ${...} se règlent dans un fichier .env à côté de ce fichier (voir .env.example).
 services:
   # Point d'entrée unique de Piscord (frontend, /api, /socket.io).
-  # Aucun port publié : le reverse proxy du VPS le joint sur le réseau Docker partagé,
-  # à l'adresse http://piscord:80
+  # Aucun port publié : Traefik le joint sur le réseau Docker qu'ils partagent.
   reverseproxy:
     image: nginx:1.28-alpine
     volumes:
@@ -14,13 +15,27 @@ services:
     networks:
       default:
       proxy:
+        # Pour un reverse proxy autre que Traefik : http://piscord:80
         aliases:
           - piscord
+    labels:
+      # Traefik lit ces labels pour envoyer le domaine vers ce conteneur
+      traefik.enable: "true"
+      # Ce conteneur est sur deux réseaux : Traefik doit passer par celui qu'ils ont en commun
+      traefik.docker.network: ${PROXY_NETWORK:-proxy}
+      traefik.http.routers.piscord.rule: Host(`${PISCORD_DOMAIN:-piscord.localhost}`)
+      traefik.http.routers.piscord.entrypoints: ${TRAEFIK_ENTRYPOINT:-websecure}
+      traefik.http.routers.piscord.tls: "true"
+      # Laisser TRAEFIK_CERTRESOLVER vide si le certificat ne vient pas d'un résolveur ACME
+      traefik.http.routers.piscord.tls.certresolver: ${TRAEFIK_CERTRESOLVER-letsencrypt}
+      traefik.http.services.piscord.loadbalancer.server.port: "80"
     depends_on:
       - backend
       - frontend
 
   backend:
+    # Sur le VPS : l'image construite par la chaîne de déploiement (BACKEND_IMAGE dans .env)
+    image: ${BACKEND_IMAGE:-piscord-backend}
     build:
       context: ./backend
       target: prod
@@ -42,6 +57,7 @@ services:
         condition: service_healthy
 
   frontend:
+    image: ${FRONTEND_IMAGE:-piscord-frontend}
     build:
       context: ./frontend
       target: prod
@@ -62,9 +78,8 @@ services:
       retries: 5
 
 networks:
-  # Réseau du reverse proxy du VPS, créé en dehors de ce projet et partagé avec les autres
-  # applications. S'il porte un autre nom que « proxy », le donner dans PROXY_NETWORK
-  # (fichier .env à la racine du dépôt).
+  # Réseau de Traefik, créé en dehors de ce projet et partagé avec les autres applications.
+  # S'il porte un autre nom que « proxy », le donner dans PROXY_NETWORK.
   proxy:
     name: ${PROXY_NETWORK:-proxy}
     external: true

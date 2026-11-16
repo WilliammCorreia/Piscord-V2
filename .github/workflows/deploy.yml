@@ -1,0 +1,156 @@
+# Intégration et déploiement continus.
+#
+#   - pull request : les tests
+#   - push sur la branche de production : les tests, la construction des images Docker,
+#     puis la mise en production sur le serveur
+#
+# Les secrets à créer dans GitHub sont décrits dans le README (« Déploiement continu »).
+name: CI/CD
+
+on:
+  push:
+    # Branche de production
+    branches: [claude]
+  pull_request:
+
+# Un seul déploiement à la fois : un push qui arrive pendant une mise en production attend son tour
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Tests du backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  frontend:
+    name: Tests du frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test -- --watch=false
+
+  images:
+    name: Images Docker
+    needs: [backend, frontend]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Connexion au registre
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+      # Chaque image porte deux noms : l'identifiant du commit (pour pouvoir revenir en arrière)
+      # et « latest », celui que le serveur télécharge.
+      - name: Construction et publication
+        run: |
+          # Un nom d'image doit être en minuscules
+          owner=$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
+
+          for service in backend frontend; do
+            image="ghcr.io/$owner/piscord-$service"
+
+            docker build --target prod \
+              --label app=piscord \
+              --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+              --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+              --tag "$image:$GITHUB_SHA" \
+              --tag "$image:latest" \
+              "$service"
+
+            docker push "$image:$GITHUB_SHA"
+            docker push "$image:latest"
+          done
+
+  deploy:
+    name: Mise en production
+    needs: images
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      packages: read
+    env:
+      # Dossier de l'application sur le serveur (relatif au dossier personnel de l'utilisateur SSH)
+      VPS_PATH: ${{ vars.VPS_PATH || 'piscord' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Accès SSH au serveur
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ vars.VPS_PORT || '22' }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          for name in VPS_HOST VPS_USER VPS_SSH_KEY VPS_KNOWN_HOSTS; do
+            if [ -z "$(printenv "$name")" ]; then
+              echo "::error::Le secret $name n'est pas défini (voir le README, « Déploiement continu »)."
+              exit 1
+            fi
+          done
+
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # L'empreinte du serveur est fournie d'avance : la connexion est refusée si une
+          # autre machine répond à sa place.
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+          cat > ~/.ssh/config <<EOF
+          Host vps
+            HostName $VPS_HOST
+            User $VPS_USER
+            Port $VPS_PORT
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            BatchMode yes
+          EOF
+
+      - name: Envoi de la configuration
+        run: |
+          ssh vps "mkdir -p '$VPS_PATH'"
+          scp docker-compose.yml config.conf scripts/deploy.sh "vps:$VPS_PATH/"
+
+      # Le jeton sert au serveur à télécharger les images. Il cesse d'être valable à la fin
+      # de ce job et n'est pas conservé sur le serveur (voir scripts/deploy.sh).
+      - name: Déploiement
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf '%s' "$GITHUB_TOKEN" \
+            | ssh vps "cd '$VPS_PATH' && REGISTRY=ghcr.io REGISTRY_USER='$GITHUB_ACTOR' sh deploy.sh"

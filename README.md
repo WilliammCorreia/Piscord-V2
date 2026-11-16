@@ -27,7 +27,8 @@ Application de chat en temps réel inspirée de Discord, développée avec Node.
 - SCSS, mobile first
 
 **Infrastructure**
-- Docker Compose, nginx en reverse proxy
+- Docker Compose, nginx en reverse proxy, Traefik devant en production
+- GitHub Actions pour les tests et le déploiement
 
 ## 📋 Prérequis
 
@@ -67,32 +68,82 @@ L'application est alors accessible sur `http://localhost:8088`.
 
 ## 🌍 Déploiement sur un serveur
 
-En production, Piscord ne publie aucun port : il se place derrière le reverse proxy du serveur,
-celui qui écoute sur les ports 80 et 443, porte les certificats HTTPS et répartit les domaines
-entre les applications de la machine.
+En production, Piscord ne publie aucun port : il se place derrière le reverse proxy du serveur
+(Traefik), qui écoute sur les ports 80 et 443, porte les certificats HTTPS et répartit les
+domaines entre les applications de la machine.
 
 ```
-Internet ──► reverse proxy du serveur (HTTPS) ──► reverse proxy de Piscord ──► frontend / backend
+Internet ──► Traefik (HTTPS) ──► reverse proxy de Piscord ──► frontend / backend
 ```
 
-Les deux reverse proxys se parlent sur un réseau Docker partagé, nommé `proxy` par défaut.
-S'il n'existe pas encore, le créer et y rattacher le conteneur du reverse proxy du serveur :
+Traefik découvre Piscord grâce aux labels de `docker-compose.yml`, et le joint sur le réseau
+Docker qu'ils partagent.
+
+### Préparer le serveur (une seule fois)
+
+Dans un dossier `piscord` du dossier personnel de l'utilisateur qui déploie, créer deux fichiers.
+
+`.env`, à partir de [`.env.example`](.env.example) :
+
+| Variable | Rôle |
+| --- | --- |
+| `PISCORD_DOMAIN` | Domaine de l'application |
+| `PROXY_NETWORK` | Réseau Docker de Traefik (`docker network ls` pour le retrouver) |
+| `TRAEFIK_ENTRYPOINT` | Nom du point d'entrée HTTPS de Traefik |
+| `TRAEFIK_CERTRESOLVER` | Nom de son résolveur de certificats (vide s'il n'y en a pas) |
+| `BACKEND_IMAGE`, `FRONTEND_IMAGE` | Images publiées par la chaîne de déploiement |
+
+`backend/.env`, à partir de [`backend/.env.example`](backend/.env.example), avec un `JWT_SECRET`
+propre au serveur.
+
+Les deux noms Traefik doivent être ceux de sa configuration : avec un point d'entrée inconnu, le
+site répond 404 ; avec un résolveur inconnu, il est servi avec un certificat auto-signé.
+
+### Déploiement continu
+
+Le workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) se déclenche à chaque
+push sur la branche `claude` :
+
+1. tests du backend et du frontend ;
+2. construction des images Docker, publiées sur le registre de GitHub (`ghcr.io`) ;
+3. connexion SSH au serveur, envoi de `docker-compose.yml`, `config.conf` et `scripts/deploy.sh`,
+   puis exécution de ce script : il télécharge les images, relance les conteneurs et vérifie que
+   l'application répond.
+
+Si une étape échoue, les suivantes ne sont pas lancées et la version en place continue de tourner.
+
+Le workflow se connecte avec une clé SSH réservée au déploiement :
 
 ```bash
-docker network create proxy
+ssh-keygen -t ed25519 -N "" -C "deploiement-piscord" -f piscord_deploy
 ```
 
-Si ce réseau porte un autre nom, l'indiquer dans un fichier `.env` à la racine du dépôt :
-`PROXY_NETWORK=nom-du-reseau`.
+Ajouter le contenu de `piscord_deploy.pub` au fichier `~/.ssh/authorized_keys` de l'utilisateur
+du serveur (il doit pouvoir lancer `docker`), puis créer ces secrets dans GitHub
+(Settings → Secrets and variables → Actions) :
 
-Lancer Piscord :
+| Secret | Valeur |
+| --- | --- |
+| `VPS_HOST` | Adresse du serveur |
+| `VPS_USER` | Utilisateur SSH |
+| `VPS_SSH_KEY` | Contenu du fichier `piscord_deploy` (la clé privée) |
+| `VPS_KNOWN_HOSTS` | Résultat de `ssh-keyscan -t ed25519 <adresse du serveur>` |
 
-```bash
-docker compose -f docker-compose.yml up -d --build
-```
+Deux variables facultatives, dans l'onglet « Variables » : `VPS_PORT` si SSH n'écoute pas sur le
+port 22 (ajouter alors `-p <port>` à `ssh-keyscan`), et `VPS_PATH` si le dossier de l'application
+n'est pas `piscord`.
 
-Il reste à dire au reverse proxy du serveur d'envoyer le domaine vers `http://piscord:80`,
-en transmettant les en-têtes WebSocket (sans eux, le temps réel retombe sur du long-polling).
+Pour revenir à une version précédente : relancer (« Re-run all jobs ») l'exécution du workflow
+du commit voulu, ou annuler le commit fautif avec `git revert` et pousser.
+
+### Avec un autre reverse proxy que Traefik
+
+Les labels sont alors ignorés. Le reverse proxy du serveur doit envoyer le domaine vers
+`http://piscord:80` sur le réseau partagé, en transmettant les en-têtes WebSocket (sans eux,
+le temps réel retombe sur du long-polling).
+
+<details>
+<summary>Exemples pour Caddy et nginx</summary>
 
 Avec Caddy, qui obtient le certificat et gère les WebSockets tout seul :
 
@@ -133,6 +184,10 @@ server {
     }
 }
 ```
+
+</details>
+
+### Adresse des visiteurs
 
 Le backend est réglé pour cette chaîne à deux reverse proxys (`TRUST_PROXY_HOPS: "2"` dans
 `docker-compose.yml`) : c'est ce qui lui permet de retrouver l'adresse réelle de chaque visiteur
@@ -224,10 +279,13 @@ piscord/
 │              ├── core/        # Coque responsive, guards, intercepteur HTTP, présence
 │              └── features/    # auth, home, friends, server, settings (chargées à la demande)
 │
-├── config.conf                 # Reverse proxy nginx de Piscord
-├── docker-compose.yml          # Production, derrière le reverse proxy du serveur
-├── docker-compose.override.yml # Ajouts pour le développement
-└── docker-compose.local.yml    # Essai de la production sur sa machine
+├── .github/workflows/deploy.yml # Tests, images Docker et mise en production
+├── scripts/deploy.sh            # Mise en production, exécutée sur le serveur
+├── config.conf                  # Reverse proxy nginx de Piscord
+├── docker-compose.yml           # Production, derrière le reverse proxy du serveur
+├── docker-compose.override.yml  # Ajouts pour le développement
+├── docker-compose.local.yml     # Essai de la production sur sa machine
+└── .env.example                 # Réglages du déploiement
 ```
 
 ---
