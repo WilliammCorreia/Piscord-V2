@@ -1,0 +1,19 @@
+# Essai de la configuration de production sur sa machine, sans le reverse proxy du VPS
+# (utile pour la PWA : le service worker n'existe que dans le build de production).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+#
+# L'application est alors accessible sur http://localhost:8088
+services:
+  reverseproxy:
+    ports:
+      - "127.0.0.1:8088:80"
+    # Pas de réseau partagé à rejoindre ici
+    networks: !override
+      - default
+
+  backend:
+    environment:
+      # Un seul reverse proxy devant le backend, et pas de HTTPS
+      TRUST_PROXY_HOPS: "1"
+      COOKIE_SECURE: "false"

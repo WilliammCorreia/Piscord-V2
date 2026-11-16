@@ -1,14 +1,21 @@
-# Configuration de production. En local, docker-compose.override.yml s'y ajoute automatiquement.
-# Pour lancer la production seule : docker compose -f docker-compose.yml up --build
+# Configuration de production : Piscord tourne derrière le reverse proxy du VPS, qui porte le HTTPS.
+# En local, docker-compose.override.yml s'y ajoute automatiquement (développement).
+#
+# Sur le VPS :            docker compose -f docker-compose.yml up -d --build
+# Essai sur sa machine :  docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
 services:
-  # Seul service exposé : tout passe par lui (frontend, /api, /socket.io)
+  # Point d'entrée unique de Piscord (frontend, /api, /socket.io).
+  # Aucun port publié : le reverse proxy du VPS le joint sur le réseau Docker partagé,
+  # à l'adresse http://piscord:80
   reverseproxy:
     image: nginx:1.28-alpine
-    ports:
-      - "80:80"
-      # Ajouter "443:443" quand le TLS sera configuré (et passer COOKIE_SECURE à true)
     volumes:
       - ./config.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      default:
+      proxy:
+        aliases:
+          - piscord
     depends_on:
       - backend
       - frontend
@@ -19,6 +26,17 @@ services:
       target: prod
     env_file:
       - ./backend/.env
+    environment:
+      # Deux reverse proxys devant le backend : celui du VPS, puis celui de Piscord
+      TRUST_PROXY_HOPS: "2"
+      # Le site est servi en HTTPS par le reverse proxy du VPS
+      COOKIE_SECURE: "true"
+    networks:
+      default:
+        # Nom propre à Piscord : le reverse proxy est aussi sur le réseau partagé, où une autre
+        # application peut avoir un conteneur nommé « backend »
+        aliases:
+          - piscord-backend
     depends_on:
       mongodb:
         condition: service_healthy
@@ -27,6 +45,10 @@ services:
     build:
       context: ./frontend
       target: prod
+    networks:
+      default:
+        aliases:
+          - piscord-frontend
 
   # Pas de port publié : la base n'est joignable que par le backend, sur le réseau Docker
   mongodb:
@@ -38,6 +60,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+networks:
+  # Réseau du reverse proxy du VPS, créé en dehors de ce projet et partagé avec les autres
+  # applications. S'il porte un autre nom que « proxy », le donner dans PROXY_NETWORK
+  # (fichier .env à la racine du dépôt).
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
 
 volumes:
   mongodb-data:

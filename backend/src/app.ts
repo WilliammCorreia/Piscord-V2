@@ -13,8 +13,10 @@ import routes from './routes/index.ts';
 export function createApp(): Express {
     const app = express();
 
-    // Derrière nginx : l'adresse du client se lit dans X-Forwarded-For (utile au rate limiting)
-    app.set('trust proxy', 1);
+    // Derrière des reverse proxys, l'adresse du client se lit dans X-Forwarded-For (utile au
+    // rate limiting). Le nombre de proxys doit être exact : trop petit, tous les visiteurs
+    // partagent l'adresse du dernier proxy ; trop grand, un client peut forger la sienne.
+    app.set('trust proxy', env.trustProxyHops);
 
     app.use(helmet());
 

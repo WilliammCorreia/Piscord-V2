@@ -1,9 +1,22 @@
 # Ajouts pour le développement, appliqués automatiquement par `docker compose up`.
-# Les ports ne sont ouverts que sur 127.0.0.1 : accessibles depuis cette machine uniquement.
+# Les ports des services ne sont ouverts que sur 127.0.0.1 : accessibles depuis cette machine uniquement.
 services:
+  # En développement le reverse proxy de Piscord est seul : il publie lui-même le port 80
+  # (sur toutes les interfaces, pour pouvoir ouvrir l'application depuis un téléphone du même réseau)
+  # et n'a pas de réseau partagé à rejoindre.
+  reverseproxy:
+    ports:
+      - "80:80"
+    networks: !override
+      - default
+
   backend:
     build:
       target: dev
+    environment:
+      # Un seul reverse proxy devant le backend, et pas de HTTPS
+      TRUST_PROXY_HOPS: "1"
+      COOKIE_SECURE: "false"
     ports:
       - "127.0.0.1:3000:3000"
     volumes:

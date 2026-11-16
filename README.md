@@ -31,7 +31,7 @@ Application de chat en temps réel inspirée de Discord, développée avec Node.
 
 ## 📋 Prérequis
 
-- Docker et Docker Compose
+- Docker et Docker Compose 2.24 ou plus récent
 - Pour travailler hors Docker : Node.js 24.15 ou plus récent
 
 ## ⚡ Lancement avec Docker
@@ -57,11 +57,87 @@ Après un changement de dépendances (`package.json`), recréer les volumes `nod
 docker compose up --build --renew-anon-volumes
 ```
 
-Lancer la configuration de production (images compilées, seul le port 80 est exposé) :
+Essayer la configuration de production sur sa machine (images compilées, service worker actif) :
 
 ```bash
-docker compose -f docker-compose.yml up --build
+docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
 ```
+
+L'application est alors accessible sur `http://localhost:8088`.
+
+## 🌍 Déploiement sur un serveur
+
+En production, Piscord ne publie aucun port : il se place derrière le reverse proxy du serveur,
+celui qui écoute sur les ports 80 et 443, porte les certificats HTTPS et répartit les domaines
+entre les applications de la machine.
+
+```
+Internet ──► reverse proxy du serveur (HTTPS) ──► reverse proxy de Piscord ──► frontend / backend
+```
+
+Les deux reverse proxys se parlent sur un réseau Docker partagé, nommé `proxy` par défaut.
+S'il n'existe pas encore, le créer et y rattacher le conteneur du reverse proxy du serveur :
+
+```bash
+docker network create proxy
+```
+
+Si ce réseau porte un autre nom, l'indiquer dans un fichier `.env` à la racine du dépôt :
+`PROXY_NETWORK=nom-du-reseau`.
+
+Lancer Piscord :
+
+```bash
+docker compose -f docker-compose.yml up -d --build
+```
+
+Il reste à dire au reverse proxy du serveur d'envoyer le domaine vers `http://piscord:80`,
+en transmettant les en-têtes WebSocket (sans eux, le temps réel retombe sur du long-polling).
+
+Avec Caddy, qui obtient le certificat et gère les WebSockets tout seul :
+
+```
+piscord.example.com {
+    reverse_proxy piscord:80
+}
+```
+
+Avec nginx :
+
+```nginx
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+    listen 443 ssl;
+    server_name piscord.example.com;
+
+    ssl_certificate     /etc/letsencrypt/live/piscord.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/piscord.example.com/privkey.pem;
+
+    # Résolution du nom à chaque requête (DNS interne de Docker) : nginx démarre même si Piscord
+    # est arrêté, et suit son conteneur quand une mise à jour le recrée avec une autre adresse
+    resolver 127.0.0.11 valid=10s;
+    set $piscord http://piscord:80;
+
+    location / {
+        proxy_pass $piscord;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+}
+```
+
+Le backend est réglé pour cette chaîne à deux reverse proxys (`TRUST_PROXY_HOPS: "2"` dans
+`docker-compose.yml`) : c'est ce qui lui permet de retrouver l'adresse réelle de chaque visiteur
+pour limiter les tentatives de connexion. Si un proxy de plus s'intercale (Cloudflare, par exemple),
+augmenter ce nombre d'autant.
 
 ## 📱 PWA et salons vocaux : HTTPS requis
 
@@ -71,7 +147,7 @@ Sur un serveur accessible en simple HTTP, l'application fonctionne mais ne peut 
 ni utilisée pour le vocal.
 
 - **PWA** : le service worker n'est actif que sur le build de production
-  (`docker compose -f docker-compose.yml up --build`), pas avec `ng serve`.
+  (voir « Essayer la configuration de production » plus haut), pas avec `ng serve`.
 - **Vocal** : le son passe directement entre les navigateurs. Le serveur STUN public configuré dans
   `frontend/src/environments/` suffit sur la plupart des réseaux ; derrière un NAT strict il faut
   y ajouter un serveur TURN. Un salon accueille 8 participants au plus.
@@ -119,6 +195,10 @@ L'application est alors accessible sur `http://localhost:4200`.
 | `JWT_REFRESH_SECRET` | Secret dédié aux refresh tokens (optionnel) |
 | `CORS_ORIGINS` | Origines autorisées en cross-origin, séparées par des virgules (inutile derrière le reverse proxy) |
 | `COOKIE_SECURE` | `true` dès que le site est servi en HTTPS |
+| `TRUST_PROXY_HOPS` | Nombre de reverse proxys entre le visiteur et le backend (1 par défaut) |
+
+Avec Docker Compose, `COOKIE_SECURE` et `TRUST_PROXY_HOPS` sont fixés par les fichiers
+`docker-compose*.yml`, qui l'emportent sur `backend/.env`.
 
 ## 📁 Structure
 
@@ -144,9 +224,10 @@ piscord/
 │              ├── core/        # Coque responsive, guards, intercepteur HTTP, présence
 │              └── features/    # auth, home, friends, server, settings (chargées à la demande)
 │
-├── config.conf                 # Reverse proxy nginx
-├── docker-compose.yml          # Production
-└── docker-compose.override.yml # Ajouts pour le développement
+├── config.conf                 # Reverse proxy nginx de Piscord
+├── docker-compose.yml          # Production, derrière le reverse proxy du serveur
+├── docker-compose.override.yml # Ajouts pour le développement
+└── docker-compose.local.yml    # Essai de la production sur sa machine
 ```
 
 ---

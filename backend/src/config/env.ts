@@ -20,6 +20,23 @@ function list(value: string | undefined): string[] {
         .filter(Boolean);
 }
 
+/**
+ * Lit un entier positif ou nul
+ * @throws {Error} Si la valeur n'est pas un entier : une faute de frappe ne doit pas passer inaperçue
+ */
+function count(name: string, fallback: number): number {
+    const raw = process.env[name];
+    if (raw === undefined || raw.trim() === '') {
+        return fallback;
+    }
+
+    const value = Number(raw);
+    if (!Number.isInteger(value) || value < 0) {
+        throw new Error(`Variable d'environnement invalide : ${name} doit être un entier positif ou nul`);
+    }
+    return value;
+}
+
 const jwtSecret = required('JWT_SECRET');
 
 /**
@@ -33,6 +50,7 @@ export const env = {
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || jwtSecret,
     corsOrigins: list(process.env.CORS_ORIGINS ?? process.env.REVERSE_PROXY_ADDRESS),
     cookieSecure: process.env.COOKIE_SECURE === 'true',
+    trustProxyHops: count('TRUST_PROXY_HOPS', 1),
     bcryptRounds: Number(process.env.BCRYPT_ROUNDS ?? 12),
 } as const;
 
