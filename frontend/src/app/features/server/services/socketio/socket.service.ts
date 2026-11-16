@@ -12,6 +12,18 @@ export class SocketService {
   /** Un flux par événement écouté : les abonnés survivent à une reconnexion ou à un changement de session */
   private readonly events = new Map<string, Subject<unknown>>();
 
+  constructor() {
+    // Quand l'utilisateur part vers un autre site, le navigateur peut garder la page en mémoire
+    // (cache précédent/suivant) avec sa connexion ouverte : il resterait « en ligne » pour les autres.
+    // On ferme donc la connexion en quittant la page, et on la rouvre si la page est restaurée.
+    window.addEventListener('pagehide', () => this.socket?.disconnect());
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        this.socket?.connect();
+      }
+    });
+  }
+
   /**
    * Ouvre la connexion temps réel si elle ne l'est pas déjà.
    * Le serveur authentifie le socket avec les cookies de session : il faut donc

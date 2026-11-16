@@ -8,7 +8,10 @@ Application de chat en temps réel inspirée de Discord, développée avec Node.
 - ✅ Création et gestion de serveurs, salons et invitations
 - ✅ Messages en temps réel, avec historique paginé
 - ✅ Indicateur "en train d'écrire"
-- ✅ Liste des membres du serveur
+- ✅ Statut de connexion : pastille verte sur les membres et les amis connectés
+- ✅ Amis (demande par pseudo ou depuis un serveur) et messages privés
+- ✅ Salons vocaux (WebRTC, pair-à-pair)
+- ✅ Interface pensée mobile d'abord, installable comme application (PWA)
 
 ## 🛠️ Technologies
 
@@ -19,9 +22,9 @@ Application de chat en temps réel inspirée de Discord, développée avec Node.
 - JWT en cookies httpOnly pour l'authentification
 
 **Frontend**
-- Angular 22 (composants standalone)
-- Socket.io-client
-- SCSS
+- Angular 22 (composants standalone), service worker Angular pour le mode PWA
+- Socket.io-client, WebRTC pour le vocal
+- SCSS, mobile first
 
 **Infrastructure**
 - Docker Compose, nginx en reverse proxy
@@ -59,6 +62,21 @@ Lancer la configuration de production (images compilées, seul le port 80 est ex
 ```bash
 docker compose -f docker-compose.yml up --build
 ```
+
+## 📱 PWA et salons vocaux : HTTPS requis
+
+Les navigateurs réservent le service worker (installation, ouverture hors ligne) et l'accès au
+micro aux pages sécurisées : `https://`, ou `http://localhost` pour le développement.
+Sur un serveur accessible en simple HTTP, l'application fonctionne mais ne peut être ni installée
+ni utilisée pour le vocal.
+
+- **PWA** : le service worker n'est actif que sur le build de production
+  (`docker compose -f docker-compose.yml up --build`), pas avec `ng serve`.
+- **Vocal** : le son passe directement entre les navigateurs. Le serveur STUN public configuré dans
+  `frontend/src/environments/` suffit sur la plupart des réseaux ; derrière un NAT strict il faut
+  y ajouter un serveur TURN. Un salon accueille 8 participants au plus.
+- **Statut de connexion** : il est tenu en mémoire par le backend, ce qui suppose une seule
+  instance du backend.
 
 ## 🧪 Tests
 
@@ -110,12 +128,12 @@ piscord/
 │    ├── src/
 │    │    ├── routes/           # Routes
 │    │    ├── controllers/      # Contrôleurs
-│    │    ├── services/         # Services métier (dont AccessService : contrôle d'appartenance)
+│    │    ├── services/         # Services métier (accès, amis, présence, état des salons vocaux)
 │    │    ├── repositories/     # Accès aux données
 │    │    ├── models/           # Schémas MongoDB
 │    │    ├── validators/       # Validation des données
 │    │    ├── middleware/       # Authentification, validation, erreurs, rate limiting
-│    │    ├── socket/           # Socket.io (authentification, salons, diffusion)
+│    │    ├── socket/           # Socket.io (authentification, présence, salons, signalisation vocale)
 │    │    ├── app.ts            # Application Express
 │    │    └── server.ts         # Point d'entrée
 │    └── tests/                 # Tests d'intégration
@@ -123,8 +141,8 @@ piscord/
 ├── frontend/
 │    └── src/
 │         └── app/
-│              ├── core/        # Guards, intercepteur HTTP, modèles communs
-│              └── features/    # auth, home, server, settings (chargées à la demande)
+│              ├── core/        # Coque responsive, guards, intercepteur HTTP, présence
+│              └── features/    # auth, home, friends, server, settings (chargées à la demande)
 │
 ├── config.conf                 # Reverse proxy nginx
 ├── docker-compose.yml          # Production

@@ -30,6 +30,11 @@ export function initSocket(httpServer: HttpServer): PiscordServer {
         cors: env.corsOrigins.length > 0
             ? { origin: env.corsOrigins, credentials: true }
             : undefined,
+        // Battement de cœur resserré (25 s + 20 s par défaut) : une connexion coupée sans prévenir
+        // (réseau perdu, appareil en veille) est détectée en 20 secondes au plus, et le statut
+        // « en ligne » de l'utilisateur ne reste pas affiché à tort plus longtemps.
+        pingInterval: 10_000,
+        pingTimeout: 10_000,
     });
     io = server;
 

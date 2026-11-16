@@ -130,11 +130,18 @@ textarea {
     flex: 1;
     min-width: 0;
     height: 3rem;
-    padding: 0.8rem var(--spacing-md);
+    // Une ligne de texte tient exactement dans la hauteur : pas de barre de défilement à vide
+    padding: 0.7rem var(--spacing-md);
     border-radius: 15px;
     color: var(--text-primary);
     line-height: 1.4;
     resize: none;
+    // Un message de plusieurs lignes défile, sans barre visible dans un champ aussi bas
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .send {
