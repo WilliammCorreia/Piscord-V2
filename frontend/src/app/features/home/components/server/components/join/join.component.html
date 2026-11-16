@@ -1,16 +1,17 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Rejoindre</h1>
   </header>
-  <div class="container">
-    <form [formGroup]="formGroup" (submit)="onSubmit($event)">
-      <div class="inputs">
-        <div class="code">
+  <div class="page__body">
+    <form class="form" [formGroup]="formGroup" (submit)="onSubmit($event)">
+      <div class="form__fields">
+        <div class="field">
           <label for="code">Code : </label>
           <input
             id="code"
             name="code"
             type="text"
+            autocomplete="off"
             formControlName="code">
           @if (isFieldValid('code')) {
             <div class="error">
@@ -24,7 +25,7 @@
           }
         </div>
       </div>
-      <div class="submit">
+      <div class="form__actions">
         <button type="submit" [disabled]="formGroup.invalid">Rejoindre</button>
       </div>
     </form>

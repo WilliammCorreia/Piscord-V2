@@ -190,6 +190,8 @@ describe('ChatComponent', () => {
       socket.trigger('connect');
 
       expect(socket.emittedFor('join-channel')).toEqual(['salon-a', 'salon-a']);
+      // À chaque connexion, la liste d'amis est rechargée (présence, demandes en attente)
+      httpMock.expectOne('/api/friend').flush({ success: true, data: { friends: [], incoming: [], outgoing: [] }, message: '' });
     });
   });
 

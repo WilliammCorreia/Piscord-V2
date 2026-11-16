@@ -55,6 +55,17 @@ export class AuthService {
   setUser(user: UserData): void {
     this.userData = user;
     localStorage.setItem("user", JSON.stringify(user));
+    this.socketService.connect();
+  }
+
+  /**
+   * Au démarrage de l'application : rouvre la connexion temps réel d'un utilisateur déjà connecté
+   * (c'est elle qui le fait apparaître « en ligne » auprès des autres)
+   */
+  resumeSession(): void {
+    if (this.userData) {
+      this.socketService.connect();
+    }
   }
 
   /**

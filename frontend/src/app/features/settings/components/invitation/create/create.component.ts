@@ -8,7 +8,6 @@ import { apiErrorMessage } from '../../../../../core/models/api.model';
     selector: 'app-create',
     templateUrl: './create.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './create.component.scss',
     imports: [ReactiveFormsModule]
 })
 export class CreateComponent implements OnInit {

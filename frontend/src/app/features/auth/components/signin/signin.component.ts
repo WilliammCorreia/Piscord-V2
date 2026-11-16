@@ -13,7 +13,6 @@ import { apiErrorMessage } from '../../../../core/models/api.model';
     selector: 'app-signin',
     templateUrl: './signin.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './signin.component.scss',
     imports: [ReactiveFormsModule]
 })
 export class SigninComponent {

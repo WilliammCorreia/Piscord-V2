@@ -1,16 +1,17 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Inscription</h1>
   </header>
-  <article>
-    <form [formGroup]="formGroup" (submit)="onSubmit($event)">
-      <div class="inputs">
-        <div class="email">
+  <div class="page__body">
+    <form class="form" [formGroup]="formGroup" (submit)="onSubmit($event)">
+      <div class="form__fields">
+        <div class="field">
           <label for="email">Email : </label>
           <input
             id="email"
             placeholder="Saisir votre email"
             type="email"
+            autocomplete="email"
             formControlName="email">
           @if (isFieldValid('email')) {
             <div class="error">
@@ -26,37 +27,37 @@
             <div class="error">*Email déjà utilisé</div>
           }
         </div>
-        <div class="password">
+        <div class="field">
           <label for="password">Mot de passe : </label>
           <input
             id="password"
             placeholder="Saisir votre mot de passe"
             type="password"
+            autocomplete="new-password"
             formControlName="password">
           @if (isFieldValid('password')) {
-            <div class="pwdRequire">
-              @if (formGroup.get('password')?.hasError('required')) {
-                <div class="error">*Ce champ est requis</div>
-              }
-              @if (formGroup.get('password')?.hasError('pattern')) {
-                <div class="error">
-                  *Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.
-                </div>
-              }
-            </div>
+            @if (formGroup.get('password')?.hasError('required')) {
+              <div class="error">*Ce champ est requis</div>
+            }
+            @if (formGroup.get('password')?.hasError('pattern')) {
+              <div class="error">
+                *Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.
+              </div>
+            }
           }
           @if (!formGroup.get('password')?.touched) {
-            <div class="pwdRequire">
+            <div class="hint">
               *Le mot de passe doit contenir au minimum : 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.
             </div>
           }
         </div>
-        <div class="pwdConfirm">
+        <div class="field">
           <label for="pwdConfirm">Confirmer le mot de passe : </label>
           <input
             id="pwdConfirm"
             placeholder="Saisir à nouveau votre mot de passe"
             type="password"
+            autocomplete="new-password"
             formControlName="pwdConfirm">
           @if (isFieldValid('pwdConfirm') && !hasPasswordMismatch()) {
             <div class="error">
@@ -69,12 +70,13 @@
             <div class="error">*Les mots de passe ne correspondent pas</div>
           }
         </div>
-        <div class="pseudo">
+        <div class="field">
           <label for="pseudo">Pseudo : </label>
           <input
             id="pseudo"
             placeholder="Saisir votre pseudo"
             type="text"
+            autocomplete="username"
             formControlName="pseudo">
           @if (isFieldValid('pseudo')) {
             <div class="error">
@@ -89,11 +91,14 @@
               }
             </div>
           }
+          @if (isUsernameAlreadyUsed && !isFieldValid('pseudo')) {
+            <div class="error">*Pseudo déjà utilisé</div>
+          }
         </div>
       </div>
-      <div class="submit">
+      <div class="form__actions">
         <button type="submit" [disabled]="formGroup.invalid">S'inscrire</button>
       </div>
     </form>
-  </article>
+  </div>
 </div>

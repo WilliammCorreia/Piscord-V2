@@ -1,13 +1,21 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Lister</h1>
   </header>
-  <div class="container">
-    <ul>
+  <div class="page__body">
+    @if (error) {
+      <p class="list__empty error" role="alert">{{ error }}</p>
+    }
+    <ul class="list">
       @for (channel of channels; track channel._id) {
-        <li>
-          <a>{{ channel.name }}</a>
+        <li class="list__item">
+          <span>{{ channel.type === 'voice' ? 'Vocal' : '#' }}</span>
+          <span>{{ channel.name }}</span>
         </li>
+      } @empty {
+        @if (!loading && !error) {
+          <li class="list__empty">Ce serveur n'a pas encore de salon.</li>
+        }
       }
     </ul>
   </div>

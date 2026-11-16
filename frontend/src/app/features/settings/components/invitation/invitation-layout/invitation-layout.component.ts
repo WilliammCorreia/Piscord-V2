@@ -5,7 +5,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     selector: 'app-invitation-layout',
     templateUrl: './invitation-layout.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './invitation-layout.component.scss',
     imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class InvitationLayoutComponent {

@@ -5,7 +5,6 @@ import { AuthService } from '../../../auth/services/auth.service';
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
   name: string = '';

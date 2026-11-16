@@ -1,0 +1,133 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.shell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+// --- Mobile : barre du haut + menu en tiroir ---------------------------------
+
+.shell__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+    height: calc(var(--bar-height) + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) var(--spacing-sm) 0;
+    border-bottom: 2px solid var(--bg-secondary);
+}
+
+.shell__burger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.shell__badge {
+    position: absolute;
+    top: 0.125rem;
+    right: 0;
+}
+
+.shell__brand {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.shell__body {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.shell__nav {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    width: min(85vw, 20rem);
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background-color: var(--bg-primary);
+    border-right: 2px solid var(--bg-secondary);
+    overflow-y: auto;
+    // Fermé : hors écran, et invisible pour que ses liens ne prennent pas le focus clavier
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.2s ease, visibility 0.2s;
+
+    &.open {
+        transform: none;
+        visibility: visible;
+    }
+}
+
+.shell__nav-brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: var(--bar-height);
+    padding: 0 var(--spacing-md);
+    border-bottom: 2px solid var(--bg-secondary);
+    text-decoration: none;
+}
+
+.shell__nav-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.shell__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+.shell__main {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+}
+
+// --- À partir de 768 px : le menu devient une colonne fixe -------------------
+
+@media (min-width: 768px) {
+    .shell__bar,
+    .shell__backdrop {
+        display: none;
+    }
+
+    .shell__nav {
+        position: static;
+        width: var(--nav-width);
+        flex-shrink: 0;
+        padding: 0;
+        transform: none;
+        visibility: visible;
+        transition: none;
+
+        &.wide {
+            width: var(--nav-width-wide);
+        }
+    }
+
+    .shell__nav-brand {
+        height: 2.5rem;
+        padding: 0 var(--spacing-sm);
+    }
+}

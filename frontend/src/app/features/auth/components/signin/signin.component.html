@@ -1,20 +1,21 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Connexion</h1>
   </header>
-  <article>
-    <form [formGroup]="formGroup" (submit)="onSubmit($event)">
-      <div class="inputs">
+  <div class="page__body">
+    <form class="form" [formGroup]="formGroup" (submit)="onSubmit($event)">
+      <div class="form__fields">
         @if (isLoginFailed) {
-          <div class="error">Email ou mot de passe incorrect</div>
+          <div class="error" role="alert">Email ou mot de passe incorrect</div>
         }
-        <div class="email">
+        <div class="field">
           <label for="email">Email : </label>
           <input
             id="email"
             name="email"
             placeholder="Saisir votre email"
             type="email"
+            autocomplete="email"
             formControlName="email">
           @if (isFieldValid('email')) {
             <div class="error">
@@ -27,22 +28,23 @@
             </div>
           }
         </div>
-        <div class="password">
+        <div class="field">
           <label for="password">Mot de passe : </label>
           <input
             id="password"
             name="password"
             placeholder="Saisir votre mot de passe"
             type="password"
+            autocomplete="current-password"
             formControlName="password">
           @if (isFieldValid('password')) {
             <div class="error">*Ce champ est requis</div>
           }
         </div>
       </div>
-      <div class="submit">
+      <div class="form__actions">
         <button type="submit" [disabled]="formGroup.invalid">Se connecter</button>
       </div>
     </form>
-  </article>
+  </div>
 </div>

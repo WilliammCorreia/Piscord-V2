@@ -1,0 +1,39 @@
+<div class="shell">
+  <header class="shell__bar">
+    <button
+      type="button"
+      class="shell__burger"
+      aria-label="Menu"
+      [attr.aria-expanded]="menuOpen"
+      (click)="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      @if (badge > 0) {
+        <span class="badge shell__badge">{{ badge }}</span>
+      }
+    </button>
+    <a class="shell__brand" [routerLink]="homeLink">Piscord</a>
+  </header>
+
+  <app-voice-bar />
+
+  <div class="shell__body">
+    <aside class="shell__nav" [class.open]="menuOpen" [class.wide]="wide">
+      <a class="shell__nav-brand" [routerLink]="homeLink">
+        <h2>Piscord</h2>
+      </a>
+      <nav class="shell__nav-content">
+        <ng-content select="[shellNav]" />
+      </nav>
+    </aside>
+
+    @if (menuOpen) {
+      <div class="shell__backdrop" (click)="closeMenu()"></div>
+    }
+
+    <main class="shell__main">
+      <ng-content />
+    </main>
+  </div>
+</div>

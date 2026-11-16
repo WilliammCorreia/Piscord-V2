@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'app-list',
     templateUrl: './list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
   invitations: Invitation[] = [];

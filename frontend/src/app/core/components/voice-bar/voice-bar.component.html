@@ -1,0 +1,23 @@
+@if (voice.channelId) {
+  <div class="voice-bar" [attr.data-voice-status]="status">
+    <div class="voice-bar__info">
+      <span class="status-dot online"></span>
+      <div class="voice-bar__text">
+        <strong>{{ voice.channelName }}</strong>
+        <span>{{ status }}</span>
+      </div>
+    </div>
+    <div class="voice-bar__actions">
+      <button type="button" class="voice-bar__button" [class.active]="voice.muted" (click)="voice.toggleMute()">
+        {{ voice.muted ? 'Réactiver le micro' : 'Couper le micro' }}
+      </button>
+      <button type="button" class="voice-bar__button danger" (click)="voice.leave()">Raccrocher</button>
+    </div>
+  </div>
+}
+@if (voice.error) {
+  <div class="voice-bar voice-bar--error" role="alert">
+    <span>{{ voice.error }}</span>
+    <button type="button" class="voice-bar__button" (click)="voice.error = ''">Fermer</button>
+  </div>
+}

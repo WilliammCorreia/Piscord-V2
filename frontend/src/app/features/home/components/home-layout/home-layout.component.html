@@ -1,22 +1,18 @@
-<div class="content">
-    <aside>
-        <header>
-            <a routerLink="/home">
-                <h2>Piscord</h2>
-            </a>
-        </header>
-        <section>
-            <div class="title">
-                <h3>Catégories</h3>
-            </div>
-            <article>
-                <a routerLink="/home/profile" routerLinkActive="active"># Profil</a>
-                <a routerLink="/home/server" routerLinkActive="active"># Serveurs</a>
-                <a (click)="onDisconnect()"># Déconnexion</a>
-            </article>
-        </section>
-    </aside>
-    <main>
-        <router-outlet></router-outlet>
-    </main>
-</div>
+<app-shell homeLink="/home" [badge]="friendService.pendingCount">
+  <ng-container shellNav>
+    <section class="nav-section">
+      <h3 class="nav-title">Catégories</h3>
+      <a class="nav-link" routerLink="/home/profile" routerLinkActive="active"># Profil</a>
+      <a class="nav-link" routerLink="/home/server" routerLinkActive="active"># Serveurs</a>
+      <a class="nav-link" routerLink="/home/friends" routerLinkActive="active">
+        # Amis
+        @if (friendService.pendingCount > 0) {
+          <span class="badge">{{ friendService.pendingCount }}</span>
+        }
+      </a>
+      <button type="button" class="nav-link" (click)="onDisconnect()"># Déconnexion</button>
+    </section>
+  </ng-container>
+
+  <router-outlet></router-outlet>
+</app-shell>

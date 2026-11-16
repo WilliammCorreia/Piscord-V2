@@ -8,7 +8,6 @@ import { apiErrorMessage } from '../../../../../core/models/api.model';
     selector: 'app-create',
     templateUrl: './create.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './create.component.scss',
     imports: [ReactiveFormsModule]
 })
 export class CreateComponent implements OnInit {
@@ -27,7 +26,8 @@ export class CreateComponent implements OnInit {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(24)
-      ]]
+      ]],
+      type: ['text', [Validators.required]]
     });
   }
 
@@ -50,6 +50,7 @@ export class CreateComponent implements OnInit {
       const body = {
         name: this.formGroup.value.name,
         serverId: this.serverId,
+        type: this.formGroup.value.type,
         roleIds: []
       };
 

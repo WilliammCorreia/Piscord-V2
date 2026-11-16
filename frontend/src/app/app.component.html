@@ -1,3 +1,12 @@
 <div class="app-container">
+  @if (offline) {
+    <div class="app-banner" role="status">Vous êtes hors ligne : les messages ne peuvent pas être envoyés.</div>
+  }
+  @if (updateAvailable) {
+    <div class="app-banner" role="status">
+      <span>Une nouvelle version de Piscord est disponible.</span>
+      <button type="button" (click)="reload()">Mettre à jour</button>
+    </div>
+  }
   <router-outlet></router-outlet>
 </div>

@@ -8,7 +8,6 @@ import { apiErrorMessage } from '../../../../../core/models/api.model';
     selector: 'app-list',
     templateUrl: './list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
   channels: Channel[] = [];

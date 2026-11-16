@@ -7,7 +7,6 @@ import { RouterLink } from '@angular/router';
     selector: 'app-list',
     templateUrl: './list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './list.component.scss',
     imports: [RouterLink]
 })
 export class ListComponent implements OnInit {

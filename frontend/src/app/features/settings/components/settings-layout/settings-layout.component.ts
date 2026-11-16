@@ -1,27 +1,26 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ShellComponent } from '../../../../core/components/shell/shell.component';
 
 @Component({
     selector: 'app-settings-layout',
     templateUrl: './settings-layout.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './settings-layout.component.scss',
-    imports: [RouterLink, RouterLinkActive, RouterOutlet]
+    imports: [RouterLink, RouterLinkActive, RouterOutlet, ShellComponent]
 })
-export class SettingsLayoutComponent {
+export class SettingsLayoutComponent implements OnInit {
   id: string | null = "";
 
   /**
-   * Constructeur du composant ServerLayout
+   * Constructeur du composant SettingsLayout
    * @param route Service pour accéder aux paramètres de route
-   * @param serverService Service pour les opérations liées aux serveurs
    */
   constructor(private route: ActivatedRoute) { }
 
   /**
-   * Initialise le composant en récupérant l'ID du serveur depuis l'URL et charge la liste des utilisateurs
+   * Initialise le composant en récupérant l'ID du serveur depuis l'URL
    */
-  async ngOnInit() {
+  ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get("id");
   }
 }

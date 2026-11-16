@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../../environments/environment';
 
@@ -9,45 +9,81 @@ import { environment } from '../../../../../environments/environment';
 export class SocketService {
   private socket: Socket | null = null;
 
-  /**
-   * Ouvre la connexion à la première utilisation.
-   * Le serveur authentifie le socket avec les cookies de session : il faut donc
-   * l'ouvrir après la connexion de l'utilisateur, et le fermer à sa déconnexion.
-   */
-  private getSocket(): Socket {
-    if (!this.socket) {
-      const options = {
-        withCredentials: true,
-        reconnection: true,
-        reconnectionDelay: 1000
-      };
+  /** Un flux par événement écouté : les abonnés survivent à une reconnexion ou à un changement de session */
+  private readonly events = new Map<string, Subject<unknown>>();
 
-      // Sans adresse explicite, socket.io se connecte à l'origine de la page (reverse proxy)
-      this.socket = environment.BACKEND_ADDRESS
-        ? io(environment.BACKEND_ADDRESS, options)
-        : io(options);
+  /**
+   * Ouvre la connexion temps réel si elle ne l'est pas déjà.
+   * Le serveur authentifie le socket avec les cookies de session : il faut donc
+   * l'ouvrir une fois l'utilisateur connecté, et le fermer à sa déconnexion.
+   */
+  connect(): void {
+    if (this.socket) {
+      // Connexion refusée auparavant (session expirée) : nouvelle tentative
+      if (!this.socket.active) {
+        this.socket.connect();
+      }
+      return;
     }
 
-    return this.socket;
+    const options = {
+      withCredentials: true,
+      reconnection: true,
+      reconnectionDelay: 1000
+    };
+
+    // Sans adresse explicite, socket.io se connecte à l'origine de la page (reverse proxy)
+    const socket = environment.BACKEND_ADDRESS
+      ? io(environment.BACKEND_ADDRESS, options)
+      : io(options);
+
+    for (const [eventName, subject] of this.events) {
+      socket.on(eventName, (data: unknown) => subject.next(data));
+    }
+
+    this.socket = socket;
   }
 
-  emit(eventName: string, data: unknown): void {
+  private getSocket(): Socket {
+    this.connect();
+    return this.socket as Socket;
+  }
+
+  get connected(): boolean {
+    return this.socket?.connected ?? false;
+  }
+
+  /** Identifiant du socket courant (il change à chaque reconnexion) */
+  get id(): string | undefined {
+    return this.socket?.id;
+  }
+
+  emit(eventName: string, data?: unknown): void {
     this.getSocket().emit(eventName, data);
   }
 
   /**
-   * Écoute un événement du socket
-   * @returns Observable qui retire son écouteur du socket au désabonnement
+   * Émet un événement et attend l'accusé de réception du serveur
+   */
+  emitWithAck<T>(eventName: string, data?: unknown): Promise<T> {
+    return this.getSocket().emitWithAck(eventName, data) as Promise<T>;
+  }
+
+  /**
+   * Écoute un événement du socket.
+   * L'écoute n'ouvre pas la connexion, et reste valable si le socket est recréé ensuite.
    */
   listen<T>(eventName: string): Observable<T> {
-    return new Observable<T>((subscriber) => {
-      const socket = this.getSocket();
-      const handler = (data: T) => subscriber.next(data);
+    let subject = this.events.get(eventName);
 
-      socket.on(eventName, handler);
+    if (!subject) {
+      const created = new Subject<unknown>();
+      this.events.set(eventName, created);
+      this.socket?.on(eventName, (data: unknown) => created.next(data));
+      subject = created;
+    }
 
-      return () => socket.off(eventName, handler);
-    });
+    return subject.asObservable() as Observable<T>;
   }
 
   disconnect(): void {

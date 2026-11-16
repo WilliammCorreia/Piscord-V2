@@ -14,7 +14,6 @@ import { apiErrorCode, apiErrorMessage } from '../../../../core/models/api.model
     selector: 'app-signup',
     templateUrl: './signup.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './signup.component.scss',
     imports: [ReactiveFormsModule]
 })
 export class SignupComponent implements OnInit, OnDestroy {
@@ -28,7 +27,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   }, { validators: this.passwordMatchValidator });
 
   public isEmailAlreadyUsed: boolean = false;
-  private subscription?: Subscription;
+  public isUsernameAlreadyUsed: boolean = false;
+  private subscription = new Subscription();
 
   /**
    * Constructeur du composant
@@ -41,12 +41,15 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   /**
    * Initialise le composant
-   * Configure l'écoute des changements sur le champ email pour réinitialiser l'indicateur d'email existant
+   * Configure l'écoute des changements sur les champs email et pseudo pour réinitialiser les indicateurs « déjà utilisé »
    */
   ngOnInit(): void {
-    this.subscription = this.formGroup.get("email")?.valueChanges.subscribe(() => {
+    this.subscription.add(this.formGroup.get("email")?.valueChanges.subscribe(() => {
       this.isEmailAlreadyUsed = false;
-    });
+    }));
+    this.subscription.add(this.formGroup.get("pseudo")?.valueChanges.subscribe(() => {
+      this.isUsernameAlreadyUsed = false;
+    }));
   }
 
   /**
@@ -54,7 +57,7 @@ export class SignupComponent implements OnInit, OnDestroy {
    * Désabonne les subscriptions pour éviter les fuites mémoire
    */
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   /**
@@ -95,6 +98,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   onSubmit(ev: Event): void {
     ev.preventDefault();
     this.isEmailAlreadyUsed = false;
+    this.isUsernameAlreadyUsed = false;
 
     if (this.formGroup.valid) {
       const credentials: SignupRequest = {
@@ -111,6 +115,8 @@ export class SignupComponent implements OnInit, OnDestroy {
         error: (err) => {
           if (apiErrorCode(err) === "EMAIL_TAKEN") {
             this.isEmailAlreadyUsed = true;
+          } else if (apiErrorCode(err) === "USERNAME_TAKEN") {
+            this.isUsernameAlreadyUsed = true;
           } else {
             console.error("Erreur lors de l'inscription:", err);
             alert(apiErrorMessage(err));

@@ -8,7 +8,6 @@ import { apiErrorMessage } from '../../../../../../core/models/api.model';
     selector: 'app-join',
     templateUrl: './join.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './join.component.scss',
     imports: [ReactiveFormsModule]
 })
 export class JoinComponent {

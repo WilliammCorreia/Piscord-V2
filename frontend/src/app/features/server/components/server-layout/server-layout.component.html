@@ -1,43 +1,82 @@
-<div class="content">
-  <aside>
-    <header>
-      <a routerLink="/home">
-        <h2>Piscord</h2>
-      </a>
-    </header>
-    <section>
-      <div class="users">
-        <div class="top">
-          <div class="title">
-            <h3>Utilisateurs</h3>
-          </div>
-          <article>
-            <ul>
-              @for (member of members; track member._id) {
-                <li>{{member.username}}</li>
+<app-shell homeLink="/home" [wide]="true" [badge]="friendService.pendingCount">
+  <ng-container shellNav>
+    <div class="server-nav">
+      <section class="nav-section server-nav__channels">
+        <h3 class="nav-title">Salons</h3>
+        @for (channel of textChannels; track channel._id) {
+          <a class="nav-link" [routerLink]="['channel', channel._id]" routerLinkActive="active">
+            # {{channel.name}}
+          </a>
+        }
+
+        @if (voiceChannels.length > 0) {
+          <h3 class="nav-title">Vocal</h3>
+          @for (channel of voiceChannels; track channel._id) {
+            <button
+              type="button"
+              class="nav-link voice-channel"
+              [class.active]="voice.channelId === channel._id"
+              [disabled]="voice.joining"
+              [attr.aria-pressed]="voice.channelId === channel._id"
+              (click)="toggleVoice(channel)">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+                <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+              </svg>
+              <span class="voice-channel__name">{{ channel.name }}</span>
+              <span class="voice-channel__action">{{ voice.channelId === channel._id ? 'Quitter' : 'Rejoindre' }}</span>
+            </button>
+            <ul class="voice-participants">
+              @for (participant of voice.participants(channel._id); track participant.userId) {
+                <li>
+                  <span class="status-dot online"></span>
+                  {{ participant.username }}
+                </li>
               }
             </ul>
-          </article>
-        </div>
-        <div class="settings">
-          <a [routerLink]="['/settings', id]" routerLinkActive="active">Réglages</a>
-        </div>
-      </div>
-      <div class="channels">
-        <div class="title">
-          <h3>Salons</h3>
-        </div>
-        <article>
-          @for (channel of channels; track channel._id) {
-            <a [routerLink]="['channel', channel._id]" routerLinkActive="active">
-              # {{channel.name}}
-            </a>
           }
-        </article>
-      </div>
-    </section>
-  </aside>
-  <main>
-    <router-outlet></router-outlet>
-  </main>
-</div>
+        }
+      </section>
+
+      <section class="nav-section server-nav__members">
+        <h3 class="nav-title">Utilisateurs</h3>
+        <ul>
+          @for (member of members; track member._id) {
+            <li class="member">
+              <span
+                class="status-dot"
+                [class.online]="presence.isOnline(member._id)"
+                [attr.title]="presence.isOnline(member._id) ? 'En ligne' : 'Hors ligne'"></span>
+              <span class="member__name">{{member.username}}</span>
+              @switch (friendService.relationWith(member._id)) {
+                @case ('none') {
+                  <button
+                    type="button"
+                    class="icon-button member__add"
+                    [attr.aria-label]="'Ajouter ' + member.username + ' en ami'"
+                    title="Ajouter en ami"
+                    (click)="addFriend(member)">+</button>
+                }
+                @case ('outgoing') {
+                  <span class="member__relation">Demande envoyée</span>
+                }
+                @case ('incoming') {
+                  <a class="member__relation" routerLink="/home/friends">Vous a ajouté</a>
+                }
+                @case ('friend') {
+                  <span class="member__relation">Ami</span>
+                }
+              }
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+
+    <div class="nav-footer">
+      <a class="nav-link" [routerLink]="['/settings', id]" routerLinkActive="active">Réglages</a>
+    </div>
+  </ng-container>
+
+  <router-outlet></router-outlet>
+</app-shell>

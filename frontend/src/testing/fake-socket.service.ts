@@ -7,7 +7,12 @@ import { Observable, Subject } from 'rxjs';
  */
 export class FakeSocketService {
   readonly emitted: { event: string; data: unknown }[] = [];
+  connected = false;
   disconnected = false;
+  id = 'socket-test';
+
+  /** Réponses données aux `emitWithAck`, par nom d'événement */
+  readonly ackResponses = new Map<string, unknown>();
 
   private readonly subjects = new Map<string, Subject<unknown>>();
 
@@ -20,8 +25,17 @@ export class FakeSocketService {
     return subject;
   }
 
-  emit(event: string, data: unknown): void {
+  connect(): void {
+    this.connected = true;
+  }
+
+  emit(event: string, data?: unknown): void {
     this.emitted.push({ event, data });
+  }
+
+  emitWithAck<T>(event: string, data?: unknown): Promise<T> {
+    this.emitted.push({ event, data });
+    return Promise.resolve(this.ackResponses.get(event) as T);
   }
 
   listen<T>(event: string): Observable<T> {
@@ -29,7 +43,9 @@ export class FakeSocketService {
   }
 
   disconnect(): void {
+    this.connected = false;
     this.disconnected = true;
+    this.trigger('disconnect');
   }
 
   /** Simule un événement envoyé par le serveur */

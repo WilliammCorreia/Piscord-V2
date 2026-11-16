@@ -1,36 +1,50 @@
-<div class="content">
-  <header>
-    <h1># Chat</h1>
+<div class="page">
+  <header class="page__header">
+    <div class="chat-title">
+      @if (isConversation) {
+        <a class="chat-back" routerLink="/home/friends" aria-label="Retour à la liste d'amis">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </a>
+      }
+      <h1>{{ title }}</h1>
+    </div>
     @if (typingText) {
       <div class="typing-indicator">{{ typingText }}</div>
     }
   </header>
-  <div class="container">
-    <main #messagesContainer>
-      @if (hasMore) {
-        <button type="button" class="load-older" [disabled]="loadingOlder" (click)="loadOlderMessages()">
-          {{ loadingOlder ? 'Chargement...' : 'Charger les messages précédents' }}
-        </button>
-      }
-      @for (message of messages; track message._id) {
-        <div class="message">
-          <div class="head">
-            <div class="photo">{{ message.authorId.username.charAt(0).toUpperCase() }}</div>
-            <h4>{{ message.authorId.username }}</h4>
-          </div>
-          <div class="msg-content">
-            <span>{{ formatTime(message.createdAt) }}</span>
-            <p>{{ message.content }}</p>
-          </div>
+
+  <main class="messages" #messagesContainer>
+    @if (hasMore) {
+      <button type="button" class="load-older" [disabled]="loadingOlder" (click)="loadOlderMessages()">
+        {{ loadingOlder ? 'Chargement...' : 'Charger les messages précédents' }}
+      </button>
+    }
+    @for (message of messages; track message._id) {
+      <div class="message">
+        <div class="head">
+          <div class="photo">{{ message.authorId.username.charAt(0).toUpperCase() }}</div>
+          <h4>{{ message.authorId.username }}</h4>
+          <span class="time">{{ formatTime(message.createdAt) }}</span>
         </div>
-      }
-    </main>
-    <div class="input-chat">
-      <textarea
-        placeholder="Envoyer un message..."
-        (keydown)="handleKeyDown($event)"
-        [(ngModel)]="textMessage"
-        maxlength="2000"></textarea>
-    </div>
+        <p>{{ message.content }}</p>
+      </div>
+    }
+  </main>
+
+  <div class="input-chat">
+    <textarea
+      placeholder="Envoyer un message..."
+      aria-label="Message"
+      rows="1"
+      (keydown)="handleKeyDown($event)"
+      [(ngModel)]="textMessage"
+      maxlength="2000"></textarea>
+    <button type="button" class="send" aria-label="Envoyer" [disabled]="!textMessage.trim()" (click)="sendMessage()">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M4 20l17-8L4 4l3 8-3 8zm3-8h8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+      </svg>
+    </button>
   </div>
 </div>

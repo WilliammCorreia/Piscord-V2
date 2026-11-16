@@ -1,21 +1,15 @@
-<div class="content">
-    <header>
-        <h1># Salons</h1>
-    </header>
-    <div class="container">
-        <aside>
-            <section>
-                <div class="title">
-                    <h3>ACTIONS</h3>
-                </div>
-                <article>
-                    <a routerLink="list" routerLinkActive="active"># Lister</a>
-                    <a routerLink="create" routerLinkActive="active"># Créer</a>
-                </article>
-            </section>
-        </aside>
-        <main>
-            <router-outlet></router-outlet>
-        </main>
+<div class="page">
+  <header class="page__header">
+    <h1># Salons</h1>
+  </header>
+  <div class="split">
+    <nav class="subnav">
+      <h3 class="subnav__title">ACTIONS</h3>
+      <a routerLink="list" routerLinkActive="active"># Lister</a>
+      <a routerLink="create" routerLinkActive="active"># Créer</a>
+    </nav>
+    <div class="split__main">
+      <router-outlet></router-outlet>
     </div>
+  </div>
 </div>

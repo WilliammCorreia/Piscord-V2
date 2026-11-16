@@ -1,9 +1,10 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { apiErrorMessage } from '../../../../core/models/api.model';
 import { AuthService } from '../../../auth/services/auth.service';
+import { FriendService } from '../../../friends/services/friend.service';
 import { Message, MessageDeletedEvent, TypingEvent } from '../../models/message.model';
 import { MessageService } from '../../services/message/message.service';
 import { SocketService } from '../../services/socketio/socket.service';
@@ -22,12 +23,17 @@ const TYPING_EMIT_INTERVAL_MS = 2000;
     templateUrl: './chat.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './chat.component.scss',
-    imports: [FormsModule]
+    imports: [FormsModule, RouterLink]
 })
 export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef<HTMLElement>;
 
+  /** Référence des messages affichés : l'ID d'un salon, ou l'identifiant d'une conversation privée */
   private channelId: string | null = null;
+
+  /** true quand le chat affiche une conversation privée (route /home/friends/:conversationId) */
+  protected isConversation: boolean = false;
+
   textMessage: string = "";
   protected messages: Message[] = [];
   protected hasMore: boolean = false;
@@ -47,15 +53,20 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private authService: AuthService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private friendService: FriendService
   ) { }
 
   /**
-   * Suit le salon affiché (paramètre d'URL) et s'abonne aux événements temps réel
+   * Suit le salon ou la conversation affichés (paramètre d'URL) et s'abonne aux événements temps réel
    */
   ngOnInit(): void {
     this.subscriptions.add(
-      this.route.paramMap.subscribe((params) => this.switchChannel(params.get("channelId")))
+      this.route.paramMap.subscribe((params) => {
+        const conversationId = params.get("conversationId");
+        this.isConversation = conversationId !== null;
+        this.switchChannel(conversationId ?? params.get("channelId"));
+      })
     );
 
     this.subscriptions.add(
@@ -88,6 +99,15 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.subscriptions.unsubscribe();
     this.clearTypingUsers();
+    this.friendService.setActiveConversation(null);
+  }
+
+  /** Titre de l'en-tête : le pseudo de l'ami pour une conversation privée */
+  get title(): string {
+    if (!this.isConversation || !this.channelId) return '# Chat';
+
+    const friend = this.friendService.friendByConversation(this.channelId);
+    return friend ? `@ ${friend.user.username}` : '@ Message privé';
   }
 
   /**
@@ -121,6 +141,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.messages = [];
     this.hasMore = false;
     this.clearTypingUsers();
+
+    // Les messages de la conversation ouverte ne comptent pas comme non lus
+    this.friendService.setActiveConversation(this.isConversation ? newChannelId : null);
 
     if (newChannelId) {
       this.socketService.emit("join-channel", newChannelId);

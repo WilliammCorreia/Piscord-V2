@@ -1,0 +1,69 @@
+<div class="page">
+  <header class="page__header">
+    <h1># Amis</h1>
+  </header>
+  <div class="page__body">
+    <form class="add-friend" [formGroup]="formGroup" (submit)="onSubmit($event)">
+      <label for="friend-username">Ajouter un ami</label>
+      <div class="add-friend__row">
+        <input
+          id="friend-username"
+          type="text"
+          placeholder="Pseudo"
+          autocomplete="off"
+          autocapitalize="none"
+          formControlName="username">
+        <button type="submit" [disabled]="formGroup.invalid">Envoyer</button>
+      </div>
+      @if (feedback) {
+        <div class="hint" [class.error]="feedbackIsError" role="status">{{ feedback }}</div>
+      }
+    </form>
+
+    @if (friendService.incoming.length > 0) {
+      <h3 class="section-title">Demandes reçues</h3>
+      <ul class="list">
+        @for (request of friendService.incoming; track request._id) {
+          <li class="list__item">
+            <span class="grow">{{ request.user.username }}</span>
+            <button type="button" class="icon-button" (click)="accept(request)">Accepter</button>
+            <button type="button" class="icon-button" (click)="dismiss(request)">Refuser</button>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (friendService.outgoing.length > 0) {
+      <h3 class="section-title">Demandes envoyées</h3>
+      <ul class="list">
+        @for (request of friendService.outgoing; track request._id) {
+          <li class="list__item">
+            <span class="grow">{{ request.user.username }}</span>
+            <button type="button" class="icon-button" (click)="dismiss(request)">Annuler</button>
+          </li>
+        }
+      </ul>
+    }
+
+    <h3 class="section-title">Mes amis</h3>
+    <ul class="list">
+      @for (friend of friendService.friends; track friend._id) {
+        <li class="list__item">
+          <span
+            class="status-dot"
+            [class.online]="presence.isOnline(friend.user._id)"
+            [attr.title]="presence.isOnline(friend.user._id) ? 'En ligne' : 'Hors ligne'"></span>
+          <a [routerLink]="['/home/friends', friend.conversationId]">
+            {{ friend.user.username }}
+          </a>
+          @if (friendService.unreadCount(friend.conversationId); as unread) {
+            <span class="badge" [attr.aria-label]="unread + ' messages non lus'">{{ unread }}</span>
+          }
+          <button type="button" class="icon-button" (click)="unfriend(friend)">Retirer</button>
+        </li>
+      } @empty {
+        <li class="list__empty">Aucun ami pour l'instant. Ajoutez quelqu'un par son pseudo, ou depuis la liste des membres d'un serveur.</li>
+      }
+    </ul>
+  </div>
+</div>

@@ -1,16 +1,17 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Créer</h1>
   </header>
-  <div class="container">
-    <form [formGroup]="formGroup" (submit)="onSubmit($event)">
-      <div class="inputs">
-        <div class="time">
+  <div class="page__body">
+    <form class="form" [formGroup]="formGroup" (submit)="onSubmit($event)">
+      <div class="form__fields">
+        <div class="field">
           <label for="time">Temps avant expiration (jours): </label>
           <input
             id="time"
             name="time"
             type="number"
+            inputmode="numeric"
             formControlName="time"
             placeholder="Nombre de jours"
             min="1">
@@ -25,12 +26,13 @@
             </div>
           }
         </div>
-        <div class="maxUsage">
+        <div class="field">
           <label for="maxUsage">Utilisation maximale: </label>
           <input
             id="maxUsage"
             name="maxUsage"
             type="number"
+            inputmode="numeric"
             formControlName="maxUsage"
             placeholder="Nombre d'utilisations max"
             min="1">
@@ -46,7 +48,7 @@
           }
         </div>
       </div>
-      <div class="submit">
+      <div class="form__actions">
         <button type="submit" [disabled]="formGroup.invalid">Créer</button>
       </div>
     </form>

@@ -1,13 +1,15 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Lister</h1>
   </header>
-  <div class="container">
-    <ul>
+  <div class="page__body">
+    <ul class="list">
       @for (server of servers; track server._id) {
-        <li>
+        <li class="list__item">
           <a [routerLink]="['/server', server._id]">{{ server.name }}</a>
         </li>
+      } @empty {
+        <li class="list__empty">Vous n'avez rejoint aucun serveur pour l'instant.</li>
       }
     </ul>
   </div>

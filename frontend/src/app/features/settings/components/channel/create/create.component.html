@@ -1,16 +1,17 @@
-<div class="content">
-  <header>
+<div class="page">
+  <header class="page__header">
     <h1># Créer</h1>
   </header>
-  <div class="container">
-    <form [formGroup]="formGroup" (submit)="onSubmit($event)">
-      <div class="inputs">
-        <div class="name">
+  <div class="page__body">
+    <form class="form" [formGroup]="formGroup" (submit)="onSubmit($event)">
+      <div class="form__fields">
+        <div class="field">
           <label for="name">Nom : </label>
           <input
             id="name"
             name="name"
             type="text"
+            autocomplete="off"
             formControlName="name">
           @if (isFieldValid('name')) {
             <div class="error">
@@ -26,8 +27,15 @@
             </div>
           }
         </div>
+        <div class="field">
+          <label for="type">Type : </label>
+          <select id="type" name="type" formControlName="type">
+            <option value="text">Textuel</option>
+            <option value="voice">Vocal</option>
+          </select>
+        </div>
       </div>
-      <div class="submit">
+      <div class="form__actions">
         <button type="submit" [disabled]="formGroup.invalid">Créer</button>
       </div>
     </form>

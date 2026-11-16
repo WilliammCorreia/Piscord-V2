@@ -5,7 +5,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     selector: 'app-server',
     templateUrl: './server.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrl: './server.component.scss',
     imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class ServerComponent {

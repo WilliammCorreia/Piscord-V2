@@ -3,6 +3,14 @@ import { ApiResponse } from '../../../core/models/api.model';
 export interface Member {
     _id: string;
     username: string;
+    /** Statut de connexion au moment de la réponse ; les changements arrivent ensuite par le socket */
+    online?: boolean;
+}
+
+/** Événement Socket.io : un nouveau membre a rejoint un serveur */
+export interface MemberJoinedEvent {
+    serverId: string;
+    member: Required<Member>;
 }
 
 export interface Server {
